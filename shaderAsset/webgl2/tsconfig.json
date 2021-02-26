@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outDir": "../../lib/shaderAssets",
+        "sourceMap": true,
+        "declaration": true,
+        "listFiles": true
+    },
+    "include": [
+        "./",
+    ],
+    "exclude": []
+}

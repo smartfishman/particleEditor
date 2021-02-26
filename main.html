@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<head>Particle Effect Editor</head>
+
+<body>
+    <br/>
+    <canvas id="testCanvas" width="800px" height="450px" style="margin-top: 50px;margin-left: 50px;"></canvas>
+    <p></p>
+    width:<input id="particleWidth" value="10">
+    height:<input id="particleHeight" value="10"><br/>
+    粒子生成范围:<input id="emitRange" value="100">
+    粒子存活时间（毫秒）:<input id="lifeTime" value="5000"><br/>
+    初速度:<input id="initialVelocityX" value="0"><input id="initialVelocityY" value="-20"><input id="initialVelocityZ" value="0">
+    加速度:<input id="acceleratedVelocityX"  value="0"><input id="acceleratedVelocityY"  value="0"><input id="acceleratedVelocityZ"  value="0"><br/>
+    初始旋转速度:<input id="initialRotationRate"  value="0.2">
+    旋转速度波动范围:<input id="rotationRateRange"  value="0.1"><br/>
+    每秒发射粒子数量:<input id="emitRate"  value="10">
+    <button id="doBtn">应用</button>
+</body>
+<script type="module" src="bin/main.js"></script>

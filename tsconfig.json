@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "outDir": "bin",
+        "sourceMap": true,
+        "listFiles": true,
+    },
+    "include": [
+        "TSsrc",
+    ],
+    "exclude": []
+}
