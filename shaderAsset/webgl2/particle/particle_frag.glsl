@@ -1,6 +1,8 @@
 precision mediump float;
 uniform sampler2D u_image;
 uniform sampler2D u_font;
+uniform vec3 lightColor;
+
 varying vec2 v_texcoord;
 varying float fontEnable;
 

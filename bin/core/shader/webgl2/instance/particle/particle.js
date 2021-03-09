@@ -1,9 +1,8 @@
 import { Vec3 } from "../../../../utils/exports.js";
-export class Particle {
+import { BaseNode } from "../baseNode.js";
+export class Particle extends BaseNode {
     constructor() {
-        this.width = 100;
-        this.height = 100;
-        this.position = new Vec3(0, 0, 0);
+        super(...arguments);
         this.worldPos = new Vec3(0, 0, 0);
         this.initialVelocity = new Vec3(0, 0, 0);
         this.acceleratedVelocity = new Vec3(0, 0, 0);

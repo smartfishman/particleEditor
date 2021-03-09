@@ -46,10 +46,11 @@ float getTotalSByRandomV(inout float resultS,in float initV,in float rangeV,in f
     }
     float random1 = randSeed;
     float random2 = randSeed;
-    // float random2 = (randSeed % 0.5) * 2;
+    if(random2 > 0.5){
+        random2 -=0.5;
+    }
+    random2 *=  2.0;
     float range = rangeV / 2.0;
-    // float random1 = 1.0;
-    // float random2 = 1.0;
     float a1 = random1 * lifeTime + 1.0;
     float a2 = random2 * lifeTime + 1.0;
     a1 = random2 > 0.5 ? a1 : 1.0 / a1;
