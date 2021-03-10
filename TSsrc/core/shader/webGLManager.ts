@@ -13,6 +13,8 @@ class WebGLManager {
     private _gl: WebGLRenderingContext;
     private _camera: Camera;
 
+    public currentGlProgram: WebGLProgram;
+
     public initWebGL(canvas: HTMLCanvasElement): void {
         this._canvas = canvas;
         this._gl = canvas.getContext("webgl2");
@@ -35,6 +37,11 @@ class WebGLManager {
 
     public setCamera(camera: Camera): void {
         this._camera = camera;
+    }
+
+    public useProgram(glProgram:WebGLProgram):void{
+        this._gl.useProgram(glProgram);
+        this.currentGlProgram = glProgram;
     }
 }
 

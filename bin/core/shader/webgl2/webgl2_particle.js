@@ -1,4 +1,5 @@
 import { data as shaderAssetData } from "../../../../lib/shaderAssets/shaderAsset.js";
+import webGLManager from "../webGLManager.js";
 import * as webglUtils from "../webglUtils.js";
 export default class Webgl2Particle {
     constructor(gl) {
@@ -118,7 +119,7 @@ export default class Webgl2Particle {
         this.gl.uniform1i(uniformLoc, textureUnitsOffset);
     }
     bindState() {
-        this.gl.useProgram(this.glProgram);
+        webGLManager.useProgram(this.glProgram);
         this.bindBuffer();
         this.initVertexAttribute();
         this.initUniformAttribute();
@@ -136,6 +137,9 @@ export default class Webgl2Particle {
             this.image.src = "http://localhost:3000/images/peach.png";
             this.image.onload = () => {
                 this._imageLoadIndex--;
+                if (webGLManager.currentGlProgram !== this.glProgram) {
+                    webGLManager.useProgram(this.glProgram);
+                }
                 let loc = this.gl.getUniformLocation(this.glProgram, this.imageUniformName);
                 this.bindTexture(this.image, 0, this.gl.TEXTURE_2D, loc, this.glTexture);
                 this.doDraw();
@@ -144,6 +148,9 @@ export default class Webgl2Particle {
             this.fontImage.src = "http://localhost:3000/images/font.png";
             this.fontImage.onload = () => {
                 this._imageLoadIndex--;
+                if (webGLManager.currentGlProgram !== this.glProgram) {
+                    webGLManager.useProgram(this.glProgram);
+                }
                 let loc = this.gl.getUniformLocation(this.glProgram, this.fontImageUniformName);
                 this.bindTexture(this.fontImage, 1, this.gl.TEXTURE_2D, loc, this.glFontTexture);
                 this.doDraw();

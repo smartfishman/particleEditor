@@ -1,4 +1,5 @@
 import { data as shaderAssetData } from "../../../../lib/shaderAssets/shaderAsset.js"
+import webGLManager from "../webGLManager.js";
 import * as webglUtils from "../webglUtils.js"
 
 export default class Webgl2Cube {
@@ -13,11 +14,15 @@ export default class Webgl2Cube {
     private matViewProjUniformName: string;
     private matWorldUniformName: string;
     private lightColorUniformName: string;
+    private lightPosUniformName: string;
+    private viewPosUniformName: string;
     private imageUniformName: string;
 
     private matViewProjUniformIndex: WebGLUniformLocation;
     private matWorldUniformIndex: WebGLUniformLocation;
     private lightColorUniformIndex: WebGLUniformLocation;
+    private lightPosUniformIndex: WebGLUniformLocation;
+    private viewPosUniformIndex: WebGLUniformLocation;
 
 
     private image: HTMLImageElement;
@@ -37,6 +42,8 @@ export default class Webgl2Cube {
         this.matViewProjUniformName = "matViewProj";
         this.matWorldUniformName = "matWorld";
         this.lightColorUniformName = "lightColor";
+        this.lightPosUniformName = "lightPos";
+        this.viewPosUniformName = "viewPos";
         this.imageUniformName = "u_image2";
         this.initShader();
     }
@@ -84,6 +91,8 @@ export default class Webgl2Cube {
         this.matViewProjUniformIndex = this.gl.getUniformLocation(this.glProgram, this.matViewProjUniformName);
         this.matWorldUniformIndex = this.gl.getUniformLocation(this.glProgram, this.matWorldUniformName);
         this.lightColorUniformIndex = this.gl.getUniformLocation(this.glProgram, this.lightColorUniformName);
+        this.lightPosUniformIndex = this.gl.getUniformLocation(this.glProgram, this.lightPosUniformName);
+        this.viewPosUniformIndex = this.gl.getUniformLocation(this.glProgram, this.viewPosUniformName);
     }
 
     /**
@@ -111,6 +120,9 @@ export default class Webgl2Cube {
         this.gl.uniformMatrix4fv(this.matViewProjUniformIndex, false, matViewProj);
         this.gl.uniformMatrix4fv(this.matWorldUniformIndex, false, matWorld);
         this.gl.uniform3fv(this.lightColorUniformIndex, [1, 1, 1]);
+        this.gl.uniform3fv(this.lightPosUniformIndex, [100, 200, 100]);
+        let viewPos = webGLManager.getCamera().getPos();
+        this.gl.uniform3f(this.viewPosUniformIndex, viewPos.x, viewPos.y, viewPos.z);
     }
 
     private bindTexture(image: TexImageSource, textureUnitsOffset: number, textureObjects: number, uniformLoc: WebGLUniformLocation, glTexture: WebGLTexture): void {
@@ -125,7 +137,7 @@ export default class Webgl2Cube {
     }
 
     public bindState(): void {
-        this.gl.useProgram(this.glProgram);
+        webGLManager.useProgram(this.glProgram);
         this.bindBuffer();
         this.initVertexAttribute();
         this.initUniformAttribute();
@@ -147,6 +159,9 @@ export default class Webgl2Cube {
             this.image.src = "http://localhost:3000/images/timg.jpg";
             this.image.onload = () => {
                 this._imageLoadIndex--;
+                if (webGLManager.currentGlProgram !== this.glProgram) {
+                    webGLManager.useProgram(this.glProgram);
+                }
                 let loc = this.gl.getUniformLocation(this.glProgram, this.imageUniformName);
                 this.bindTexture(this.image, 1, this.gl.TEXTURE_2D, loc, this.glTexture);
                 this.doDraw();

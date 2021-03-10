@@ -136,6 +136,20 @@ export class Quat {
         return out;
     }
     /**
+     * 反向旋转，测试下效果
+     */
+    static rotateX2(out, a, rad) {
+        rad *= 0.5;
+        const bx = Math.sin(rad);
+        const bw = Math.cos(rad);
+        const { x, y, z, w } = a;
+        out.x = x * bw + w * bx;
+        out.y = y * bw - z * bx;
+        out.z = z * bw + y * bx;
+        out.w = w * bw - x * bx;
+        return out;
+    }
+    /**
      * @zh 绕 Y 轴旋转指定四元数
      * @param rad 旋转弧度
      */
@@ -178,6 +192,14 @@ export class Quat {
         // rotate by inv-axis
         Quat.fromAxisAngle(qt_1, v3_1, rad);
         Quat.multiply(out, rot, qt_1);
+        return out;
+    }
+    /**
+     * 测试效果用
+     */
+    static rotateAround2(out, rot, axis, rad) {
+        Quat.fromAxisAngle(qt_1, axis, rad);
+        Quat.multiply(out, qt_1, rot);
         return out;
     }
     constructor(x, y, z, w) {

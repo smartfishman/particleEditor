@@ -25,6 +25,10 @@ class WebGLManager {
     setCamera(camera) {
         this._camera = camera;
     }
+    useProgram(glProgram) {
+        this._gl.useProgram(glProgram);
+        this.currentGlProgram = glProgram;
+    }
 }
 let webGLManager = WebGLManager.getInstance();
 export default webGLManager;

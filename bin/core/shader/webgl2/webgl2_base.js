@@ -1,4 +1,5 @@
 import { data as shaderAssetData } from "../../../../lib/shaderAssets/shaderAsset.js";
+import webGLManager from "../webGLManager.js";
 import * as webglUtils from "../webglUtils.js";
 export default class Webgl2Base {
     constructor(gl) {
@@ -60,7 +61,7 @@ export default class Webgl2Base {
         this.gl.uniform4fv(this.colorUniformIndex, color);
     }
     bindState() {
-        this.gl.useProgram(this.glProgram);
+        webGLManager.useProgram(this.glProgram);
         this.bindBuffer();
         this.initVertexAttribute();
         this.initUniformAttribute();

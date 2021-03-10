@@ -96,7 +96,7 @@ export class Camera {
         const arg = 400;
         let radY = vector.x / arg * Math.PI;
         let radX = vector.y / arg * Math.PI;
-        utils.Quat.rotateAround(this._rot, this._rot, new utils.Vec3(0, 1, 0), -radY);
+        utils.Quat.rotateAround2(this._rot, this._rot, new utils.Vec3(0, 1, 0), -radY);
         // utils.Quat.rotateY(this._rot, this._rot, -radY);
         utils.Quat.rotateX(this._rot, this._rot, -radX);
         this.updateForward();
@@ -128,6 +128,9 @@ export class Camera {
         this.forward.x = -this.matView.m02;
         this.forward.y = -this._matView.m06;
         this.forward.z = -this._matView.m10;
+    }
+    getPos() {
+        return this._pos.clone();
     }
 }
 //# sourceMappingURL=camera.js.map
