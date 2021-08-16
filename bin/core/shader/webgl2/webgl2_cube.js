@@ -3,7 +3,6 @@ import webGLManager from "../webGLManager.js";
 import * as webglUtils from "../webglUtils.js";
 export default class Webgl2Cube {
     constructor(gl) {
-        this._drawEnable = false;
         this._imageLoadIndex = 1;
         this.gl = gl;
         this.vertexShaderSource = shaderAssetData["standard/standard_vert"];
@@ -27,16 +26,21 @@ export default class Webgl2Cube {
         this.glArrayBuffer = this.gl.createBuffer();
         this.glElementBuffer = this.gl.createBuffer();
         this.glTexture = this.gl.createTexture();
-        this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.depthFunc(this.gl.LESS);
-        // 开启混合
-        this.gl.enable(this.gl.BLEND);
-        // 设定混合效果
-        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     }
     bindBuffer() {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glElementBuffer);
+        if (!this.image) {
+            this.image = new Image();
+            this.image.src = "http://localhost:3000/images/timg.jpg";
+            this.image.onload = () => {
+                this._imageLoadIndex--;
+            };
+        }
+        if (this._imageLoadIndex <= 0) {
+            let loc = this.gl.getUniformLocation(this.glProgram, this.imageUniformName);
+            this.bindTexture(this.image, 1, this.gl.TEXTURE_2D, loc, this.glTexture);
+        }
     }
     /**初始化顶点属性 */
     initVertexAttribute() {
@@ -102,30 +106,7 @@ export default class Webgl2Cube {
         this.initUniformAttribute();
     }
     draw() {
-        this._drawEnable = true;
-        this.doDraw();
-    }
-    doDraw() {
-        if (!this._drawEnable) {
-            return;
-        }
-        if (!this.image) {
-            this.image = new Image();
-            this.image.src = "http://localhost:3000/images/timg.jpg";
-            this.image.onload = () => {
-                this._imageLoadIndex--;
-                if (webGLManager.currentGlProgram !== this.glProgram) {
-                    webGLManager.useProgram(this.glProgram);
-                }
-                let loc = this.gl.getUniformLocation(this.glProgram, this.imageUniformName);
-                this.bindTexture(this.image, 1, this.gl.TEXTURE_2D, loc, this.glTexture);
-                this.doDraw();
-            };
-            return;
-        }
-        if (this._imageLoadIndex <= 0) {
-            this.gl.drawElements(this.gl.TRIANGLES, this.buffDataLen, this.gl.UNSIGNED_SHORT, 0);
-        }
+        this.gl.drawElements(this.gl.TRIANGLES, this.buffDataLen, this.gl.UNSIGNED_SHORT, 0);
     }
 }
 //# sourceMappingURL=webgl2_cube.js.map

@@ -23,6 +23,19 @@ export class Vec3 {
         return out;
     }
     /**
+     * @en Vector and third order matrix multiplication
+     * @zh 向量与三维矩阵乘法
+     */
+    static transformMat3(out, a, m) {
+        const x = a.x;
+        const y = a.y;
+        const z = a.z;
+        out.x = x * m.m00 + y * m.m03 + z * m.m06;
+        out.y = x * m.m01 + y * m.m04 + z * m.m07;
+        out.z = x * m.m02 + y * m.m05 + z * m.m08;
+        return out;
+    }
+    /**
      * @en Vector quaternion multiplication
      * @zh 向量四元数乘法
      */
@@ -37,6 +50,103 @@ export class Vec3 {
         out.x = ix * q.w + iw * -q.x + iy * -q.z - iz * -q.y;
         out.y = iy * q.w + iw * -q.y + iz * -q.x - ix * -q.z;
         out.z = iz * q.w + iw * -q.z + ix * -q.y - iy * -q.x;
+        return out;
+    }
+    /**
+     * @en Copy the target vector and save the results to out vector object
+     * @zh 复制目标向量
+     */
+    static copy(out, a) {
+        out.x = a.x;
+        out.y = a.y;
+        out.z = a.z;
+        return out;
+    }
+    /**
+     * @en Element-wise vector addition and save the results to out vector object
+     * @zh 逐元素向量加法
+     */
+    static add(out, a, b) {
+        out.x = a.x + b.x;
+        out.y = a.y + b.y;
+        out.z = a.z + b.z;
+        return out;
+    }
+    /**
+     * @en Element-wise vector subtraction and save the results to out vector object
+     * @zh 逐元素向量减法
+     */
+    static subtract(out, a, b) {
+        out.x = a.x - b.x;
+        out.y = a.y - b.y;
+        out.z = a.z - b.z;
+        return out;
+    }
+    /**
+     * @en Element-wise vector multiplication and save the results to out vector object
+     * @zh 逐元素向量乘法 (分量积)
+     */
+    static multiply(out, a, b) {
+        out.x = a.x * b.x;
+        out.y = a.y * b.y;
+        out.z = a.z * b.z;
+        return out;
+    }
+    /**
+     * @en Vector scalar multiplication and save the results to out vector object
+     * @zh 向量标量乘法
+     */
+    static multiplyScalar(out, a, b) {
+        out.x = a.x * b;
+        out.y = a.y * b;
+        out.z = a.z * b;
+        return out;
+    }
+    /**
+     * @en Calculates element-wise minimum values and save to the out vector
+     * @zh 逐元素向量最小值
+     */
+    static min(out, a, b) {
+        out.x = Math.min(a.x, b.x);
+        out.y = Math.min(a.y, b.y);
+        out.z = Math.min(a.z, b.z);
+        return out;
+    }
+    /**
+     * @en Calculates element-wise maximum values and save to the out vector
+     * @zh 逐元素向量最大值
+     */
+    static max(out, a, b) {
+        out.x = Math.max(a.x, b.x);
+        out.y = Math.max(a.y, b.y);
+        out.z = Math.max(a.z, b.z);
+        return out;
+    }
+    /**
+    * @en Sets the normalized vector to the out vector
+    * @zh 归一化向量
+    */
+    static normalize(out, a) {
+        const x = a.x;
+        const y = a.y;
+        const z = a.z;
+        let len = x * x + y * y + z * z;
+        if (len > 0) {
+            len = 1 / Math.sqrt(len);
+            out.x = x * len;
+            out.y = y * len;
+            out.z = z * len;
+        }
+        return out;
+    }
+    /**
+     * @en Element-wise multiplication and addition with the equation: a + b * scale
+     * @zh 逐元素向量乘加: A + B * scale
+     */
+    static scaleAndAdd(out, a, b, scale) {
+        out.x = a.x + b.x * scale;
+        out.y = a.y + b.y * scale;
+        out.z = a.z + b.z * scale;
         return out;
     }
     constructor(x, y, z) {

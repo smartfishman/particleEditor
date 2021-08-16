@@ -1,11 +1,13 @@
 import webGLManager from "../../../webGLManager.js";
 import * as utils from "../../../../utils/exports.js";
-import Webgl2Particle from "../../webgl2_particle.js";
+import Webgl2Particle from "../../shader/webgl2_particle.js";
 import { timeManager } from "../../../../utils/timeManager.js";
 import { ParticleBatchModel } from "./particle_batch_model.js";
 import { Vec3 } from "../../../../utils/exports.js";
-export class WebGl2ParticleSystem {
+import { BaseRenderableComp } from "../../../baseRenderableComp.js";
+export class WebGl2ParticleSystem extends BaseRenderableComp {
     constructor() {
+        super();
         this.isEmitConfigChanged = true;
         /**每秒发射粒子数量 */
         this.emitRate = 10;

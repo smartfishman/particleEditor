@@ -3,9 +3,12 @@ import * as utils from "../../../../utils/exports.js";
 import { Vec3 } from "../../../../utils/exports.js";
 import { BaseNode } from "../baseNode.js";
 import { CubeModel } from "./cube_model.js";
-import Webgl2Cube from "../../webgl2_cube.js";
-export class Webgl2CubeSystem {
+import Webgl2Cube from "../../shader/webgl2_cube.js";
+import { BaseRenderableComp } from "../../../baseRenderableComp.js";
+import { AABB } from "../../../../geometry/aabb.js";
+export class Webgl2CubeSystem extends BaseRenderableComp {
     constructor() {
+        super();
         this.webgl2CubeShader = new Webgl2Cube(this.getGL());
         this.node = new BaseNode();
         this.node.width = 100;
@@ -26,6 +29,14 @@ export class Webgl2CubeSystem {
         this.webgl2CubeShader.setBufferData(this.model.getIndicesData(), 2);
         this.webgl2CubeShader.setUniformAttribute(utils.Mat4.toArray([], camera.matViewProj), matWorld);
         this.webgl2CubeShader.draw();
+    }
+    getAABB() {
+        if (!this._AABB) {
+            this._AABB = new AABB();
+        }
+        this._AABB.center = this.node.position;
+        this._AABB.halfExtents = new Vec3(this.node.width / 2, this.node.width / 2, this.node.width / 2);
+        return this._AABB;
     }
 }
 function makeTranslation(tx, ty, tz) {

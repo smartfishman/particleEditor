@@ -35,17 +35,15 @@ export class WebGL2CoordinateSystem extends CoordinateSystem {
         //     -100, 100, -300, 300, 100, -300, 300, 200, -300,
         // ]);
     }
-    update() {
+    update(dt) {
+    }
+    draw() {
         let camera = webGLManager.getCamera();
         let matWorld = makeTranslation(0, 0, 0);
         let matWorld2 = makeTranslation(100, 100, -100);
         this.webGlBaseShader.bindState();
         this.webGlBaseShader.setBufferData(this.buffData);
-        // this.webGlBaseShader.setBufferData(this.indicesData, 2);
         this.webGlBaseShader.setUniformAttribute(utils.Mat4.toArray([], camera.matViewProj), matWorld, this.lineColor.glRGBA(), matWorld2);
-    }
-    draw() {
-        this.update();
         this.webGlBaseShader.drawArrayLines();
     }
 }

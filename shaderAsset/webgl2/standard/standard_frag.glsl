@@ -8,7 +8,14 @@ varying vec2 v_texcoord;
 varying vec3 v_fragWorldPos;
 varying vec3 v_normalVector;
 
-void main(){
+float near = 1.0;
+float far = 1000.0;
+float LinearizeDepth(float depth) {
+    float z = depth * 2.0 - 1.0; // back to NDC 
+    return (2.0 * near * far) / (far + near - z * (far - near));
+}
+
+void main() {
     //环境光
     float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
@@ -26,10 +33,9 @@ void main(){
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
     vec3 specular = specularStrength * spec * lightColor;
 
-    vec3 objectColor = texture2D(u_image2,v_texcoord).rgb;
+    vec3 objectColor = texture2D(u_image2, v_texcoord).rgb;
     vec3 result = (ambient + diffuse + specular) * objectColor;
     vec4 color = vec4(result, 1.0);
 
     gl_FragColor = color;
-    // gl_FragColor = vec4(0.5,0.5,0.0,1.0);
 }

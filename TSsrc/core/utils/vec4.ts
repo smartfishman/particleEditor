@@ -1,4 +1,5 @@
-import { IQuatLike } from "./quat";
+import { IMat4Like } from "./exports.js";
+import { IQuatLike } from "./quat.js";
 
 /**
  * 四维向量。
@@ -26,6 +27,22 @@ export class Vec4  {
         out.y = iy * _w + iw * -_y + iz * -_x - ix * -_z;
         out.z = iz * _w + iw * -_z + ix * -_y - iy * -_x;
         out.w = a.w;
+        return out;
+    }
+
+    /**
+     * @en Vector and fourth order matrix multiplication
+     * @zh 向量与四维矩阵乘法
+     */
+     public static transformMat4 <Out extends IVec4Like, MatLike extends IMat4Like> (out: Out, a: Out, m: MatLike) {
+        const x = a.x;
+        const y = a.y;
+        const z = a.z;
+        const w = a.w;
+        out.x = m.m00 * x + m.m04 * y + m.m08 * z + m.m12 * w;
+        out.y = m.m01 * x + m.m05 * y + m.m09 * z + m.m13 * w;
+        out.z = m.m02 * x + m.m06 * y + m.m10 * z + m.m14 * w;
+        out.w = m.m03 * x + m.m07 * y + m.m11 * z + m.m15 * w;
         return out;
     }
 

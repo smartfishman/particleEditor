@@ -1,6 +1,6 @@
-import { IMat4Like } from "./mat4";
+import { IMat4Like } from "./mat4.js";
 import * as utils from "../utils/exports.js";
-import { IVec3Like } from "./vec3";
+import { IVec3Like } from "./vec3.js";
 
 export class Quat {
     /**

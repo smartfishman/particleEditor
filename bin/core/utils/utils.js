@@ -1,4 +1,4 @@
-import webGLManager from "../shader/webGLManager.js";
+import webGLManager from "../render/webGLManager.js";
 export default class Utils {
     static windowPointToCanvas(out, point) {
         let canvas = webGLManager.getCanvas();

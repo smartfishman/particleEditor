@@ -1,4 +1,4 @@
-import webGLManager from "../shader/webGLManager.js";
+import webGLManager from "../render/webGLManager.js";
 
 export default class Utils {
     public static windowPointToCanvas(out: { x: number, y: number }, point: { x: number, y: number }): { x: number, y: number } {
