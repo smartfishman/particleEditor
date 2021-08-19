@@ -1,12 +1,25 @@
-precision mediump float;
-uniform sampler2D u_image2;
-uniform vec3 lightColor;
-uniform vec3 lightPos;
-uniform vec3 viewPos;
+#version 300 es
 
-varying vec2 v_texcoord;
-varying vec3 v_fragWorldPos;
-varying vec3 v_normalVector;
+precision highp float;
+
+uniform sampler2D u_image2;
+
+layout(std140) uniform AAACamera {
+    mat4 matViewProj;
+    vec3 lightColor;
+    vec3 lightPos;
+    vec3 viewPos;
+};
+
+layout(std140) uniform AAALocal {
+    mat4 matWorld;
+};
+
+in vec2 v_texcoord;
+in vec3 v_fragWorldPos;
+in vec3 v_normalVector;
+
+out vec4 fragColor;
 
 float near = 1.0;
 float far = 1000.0;
@@ -33,9 +46,9 @@ void main() {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
     vec3 specular = specularStrength * spec * lightColor;
 
-    vec3 objectColor = texture2D(u_image2, v_texcoord).rgb;
+    vec3 objectColor = texture(u_image2, v_texcoord).rgb;
     vec3 result = (ambient + diffuse + specular) * objectColor;
     vec4 color = vec4(result, 1.0);
 
-    gl_FragColor = color;
+    fragColor = color;
 }

@@ -1,6 +1,7 @@
 import { data as shaderAssetData } from "../../../../../lib/shaderAssets/shaderAsset.js";
 import webGLManager from "../../webGLManager.js";
 import * as webglUtils from "../../webglUtils.js";
+import { UBOCamera, UBOLocal } from "./defines/constantsDefine.js";
 export default class Webgl2Cube {
     constructor(gl) {
         this._imageLoadIndex = 1;
@@ -10,11 +11,6 @@ export default class Webgl2Cube {
         this.vertexAttributeName1 = "a_position";
         this.vertexAttributeName2 = "a_texcoord";
         this.vertexAttributeName3 = "a_normalVector";
-        this.matViewProjUniformName = "matViewProj";
-        this.matWorldUniformName = "matWorld";
-        this.lightColorUniformName = "lightColor";
-        this.lightPosUniformName = "lightPos";
-        this.viewPosUniformName = "viewPos";
         this.imageUniformName = "u_image2";
         this.initShader();
     }
@@ -27,10 +23,9 @@ export default class Webgl2Cube {
         this.glElementBuffer = this.gl.createBuffer();
         this.glTexture = this.gl.createTexture();
         this.initVAO();
+        this.initUBO();
     }
     bindTexture() {
-        // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
-        // this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glElementBuffer);
         if (!this.image) {
             this.image = new Image();
             this.image.src = "http://localhost:3000/images/timg.jpg";
@@ -53,6 +48,22 @@ export default class Webgl2Cube {
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
         this.gl.bindVertexArray(null);
     }
+    initUBO() {
+        this.glUBOCameraBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
+        this.gl.bufferData(this.gl.UNIFORM_BUFFER, UBOCamera.SIZE, this.gl.STATIC_DRAW);
+        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
+        this.gl.bindBufferBase(this.gl.UNIFORM_BUFFER, UBOCamera.BINDING, this.glUBOCameraBuffer);
+        let uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOCamera.NAME);
+        this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOCamera.BINDING);
+        this.glUBOLocalBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
+        this.gl.bufferData(this.gl.UNIFORM_BUFFER, UBOLocal.SIZE, this.gl.STATIC_DRAW);
+        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
+        this.gl.bindBufferBase(this.gl.UNIFORM_BUFFER, UBOLocal.BINDING, this.glUBOLocalBuffer);
+        uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOLocal.NAME);
+        this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOLocal.BINDING);
+    }
     /**初始化顶点属性 */
     initVertexAttribute() {
         let stride = 32;
@@ -66,13 +77,6 @@ export default class Webgl2Cube {
         this.gl.enableVertexAttribArray(2);
         this.gl.vertexAttribPointer(2, 3, this.gl.FLOAT, false, stride, 20);
     }
-    initUniformAttribute() {
-        this.matViewProjUniformIndex = this.gl.getUniformLocation(this.glProgram, this.matViewProjUniformName);
-        this.matWorldUniformIndex = this.gl.getUniformLocation(this.glProgram, this.matWorldUniformName);
-        this.lightColorUniformIndex = this.gl.getUniformLocation(this.glProgram, this.lightColorUniformName);
-        this.lightPosUniformIndex = this.gl.getUniformLocation(this.glProgram, this.lightPosUniformName);
-        this.viewPosUniformIndex = this.gl.getUniformLocation(this.glProgram, this.viewPosUniformName);
-    }
     /**
      *
      * @param buffData
@@ -84,10 +88,12 @@ export default class Webgl2Cube {
             case 1:
                 this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
                 this.gl.bufferData(this.gl.ARRAY_BUFFER, buffData, this.gl.STATIC_DRAW);
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
                 break;
             case 2:
                 this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glElementBuffer);
                 this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, buffData, this.gl.STATIC_DRAW);
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
                 break;
             default:
                 console.error("unknown type");
@@ -95,12 +101,15 @@ export default class Webgl2Cube {
         }
     }
     setUniformAttribute(matViewProj, matWorld) {
-        this.gl.uniformMatrix4fv(this.matViewProjUniformIndex, false, matViewProj);
-        this.gl.uniformMatrix4fv(this.matWorldUniformIndex, false, matWorld);
-        this.gl.uniform3fv(this.lightColorUniformIndex, [1, 1, 1]);
-        this.gl.uniform3fv(this.lightPosUniformIndex, [100, 200, 100]);
+        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
+        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.MAT_VIEW_PROJ_OFFSET * 4, matViewProj);
+        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_COLOR_OFFSET * 4, new Float32Array([1, 1, 1]));
+        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_POS_OFFSET * 4, new Float32Array([100, 200, 100]));
         let viewPos = webGLManager.getCamera().getPos();
-        this.gl.uniform3f(this.viewPosUniformIndex, viewPos.x, viewPos.y, viewPos.z);
+        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.VIEW_POS_OFFSET * 4, new Float32Array([viewPos.x, viewPos.y, viewPos.z]));
+        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
+        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOLocal.MAT_WORLD_OFFSET * 4, matWorld);
+        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
     }
     _bindTexture(image, textureUnitsOffset, textureObjects, uniformLoc, glTexture) {
         this.gl.activeTexture(this.gl.TEXTURE0 + textureUnitsOffset);
@@ -116,7 +125,6 @@ export default class Webgl2Cube {
         webGLManager.useProgram(this.glProgram);
         this.gl.bindVertexArray(this.glVAO);
         this.bindTexture();
-        this.initUniformAttribute();
     }
     draw() {
         this.gl.drawElements(this.gl.TRIANGLES, this.buffDataLen, this.gl.UNSIGNED_SHORT, 0);

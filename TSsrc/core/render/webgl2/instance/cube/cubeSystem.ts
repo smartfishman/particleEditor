@@ -36,7 +36,7 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
         this.webgl2CubeShader.bindState();
         this.webgl2CubeShader.setBufferData(this.model.getVertexData());
         this.webgl2CubeShader.setBufferData(this.model.getIndicesData(), 2);
-        this.webgl2CubeShader.setUniformAttribute(utils.Mat4.toArray([], camera.matViewProj), matWorld);
+        this.webgl2CubeShader.setUniformAttribute(new Float32Array(utils.Mat4.toArray([], camera.matViewProj)), new Float32Array(matWorld));
         this.webgl2CubeShader.draw();
     }
 

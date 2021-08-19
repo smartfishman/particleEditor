@@ -1,17 +1,29 @@
-attribute vec3 a_position;
-attribute vec2 a_texcoord;
+#version 300 es
+
+precision highp float;
+
+in vec3 a_position;
+in vec2 a_texcoord;
 //法向量
-attribute vec3 a_normalVector;
+in vec3 a_normalVector;
 
-uniform mat4 matViewProj;
-uniform mat4 matWorld;
+layout(std140) uniform AAACamera {
+    mat4 matViewProj;
+    vec3 lightColor;
+    vec3 lightPos;
+    vec3 viewPos;
+};
 
-varying vec2 v_texcoord;
-varying vec3 v_fragWorldPos;
-varying vec3 v_normalVector;
+layout(std140) uniform AAALocal {
+    mat4 matWorld;
+};
 
-void main(){
-    vec4 localPos = vec4(a_position,1.0);
+out vec2 v_texcoord;
+out vec3 v_fragWorldPos;
+out vec3 v_normalVector;
+
+void main() {
+    vec4 localPos = vec4(a_position, 1.0);
     vec4 pos = matViewProj * matWorld * localPos;
     gl_Position = pos;
 
