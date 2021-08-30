@@ -17,7 +17,7 @@ export class BaseRenderableComp {
     private _aabbModel: AABBModel;
     /**是否显示包围盒线框 */
     public showAABB: boolean = false;
-    private _lineColor: utils.Color = new utils.Color(255, 255, 255, 0.5);
+    private _lineColor: utils.Color = new utils.Color(0, 255, 0, 0.5);
 
     constructor(type = RENDERABLE_COMP_TYPE.NORMAL) {
         this.compType = type;

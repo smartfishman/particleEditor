@@ -6,7 +6,7 @@ import * as webglUtils from "../render/webglUtils.js"
 
 
 export class Camera {
-    private readonly _step: number = 30 / 60;
+    private readonly _step: number = 100 / 60;
     private _aspect: number;
     private _fov: number;
     private _near: number = 1;
@@ -302,6 +302,7 @@ export class Camera {
             gl.enable(gl.BLEND);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         }
+        gl.clearColor(1, 1, 1, 1);
         gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
     }
 

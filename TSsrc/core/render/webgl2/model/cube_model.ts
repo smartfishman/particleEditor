@@ -32,9 +32,9 @@ export class CubeModel {
             let offsetX = (flag < 2 ? -1 : 1) * offSetWidth;
             let offsetY = (flag % 2 === 0 ? -1 : 1) * offSetWidth;
             let offsetZ = (j < 4 ? 1 : -1) * offSetWidth;
-            this._verTexData[indexOffset++] = node.position.x + offsetX;
-            this._verTexData[indexOffset++] = node.position.y + offsetY;
-            this._verTexData[indexOffset++] = node.position.z + offsetZ;
+            this._verTexData[indexOffset++] = 0 + offsetX;
+            this._verTexData[indexOffset++] = 0 + offsetY;
+            this._verTexData[indexOffset++] = 0 + offsetZ;
 
             //纹理坐标
             let texCoordXIndex = flag < 2 ? 0 : 1;
@@ -55,9 +55,9 @@ export class CubeModel {
             let offsetZ = (flag < 2 ? 1 : -1) * offSetWidth;
             let offsetY = (flag % 2 === 0 ? -1 : 1) * offSetWidth;
             let offsetX = (j < 4 ? -1 : 1) * offSetWidth;
-            this._verTexData[indexOffset++] = node.position.x + offsetX;
-            this._verTexData[indexOffset++] = node.position.y + offsetY;
-            this._verTexData[indexOffset++] = node.position.z + offsetZ;
+            this._verTexData[indexOffset++] = 0 + offsetX;
+            this._verTexData[indexOffset++] = 0 + offsetY;
+            this._verTexData[indexOffset++] = 0 + offsetZ;
 
             //纹理坐标
             let texCoordXIndex = flag < 2 ? 0 : 1;
@@ -78,9 +78,9 @@ export class CubeModel {
             let offsetX = (flag < 2 ? -1 : 1) * offSetWidth;
             let offsetZ = (flag % 2 === 0 ? 1 : -1) * offSetWidth;
             let offsetY = (j < 4 ? 1 : -1) * offSetWidth;
-            this._verTexData[indexOffset++] = node.position.x + offsetX;
-            this._verTexData[indexOffset++] = node.position.y + offsetY;
-            this._verTexData[indexOffset++] = node.position.z + offsetZ;
+            this._verTexData[indexOffset++] = 0 + offsetX;
+            this._verTexData[indexOffset++] = 0 + offsetY;
+            this._verTexData[indexOffset++] = 0 + offsetZ;
 
             //纹理坐标
             let texCoordXIndex = flag < 2 ? 0 : 1;

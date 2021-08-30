@@ -25,12 +25,16 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
     draw() {
         super.draw();
         let camera = webGLManager.getCamera();
-        let matWorld = makeTranslation(0, 0, 0);
+        let matWorld = makeTranslation(this.node.position.x, this.node.position.y, this.node.position.z);
+        let twoMatWorlds = makeTranslation(this.node.position.x, this.node.position.y, this.node.position.z - 200);
+        twoMatWorlds = twoMatWorlds.concat(matWorld);
         this.webgl2CubeShader.bindState();
         this.webgl2CubeShader.setBufferData(this.model.getVertexData());
         this.webgl2CubeShader.setBufferData(this.model.getIndicesData(), 2);
-        this.webgl2CubeShader.setUniformAttribute(new Float32Array(utils.Mat4.toArray([], camera.matViewProj)), new Float32Array(matWorld));
-        this.webgl2CubeShader.draw();
+        this.webgl2CubeShader.setBufferData(new Float32Array(twoMatWorlds), 3);
+        this.webgl2CubeShader.setUniformAttribute(new Float32Array(utils.Mat4.toArray([], camera.matViewProj)));
+        this.webgl2CubeShader.drawElementInstance(2);
+        // this.webgl2CubeShader.draw();
     }
     getAABB() {
         if (!this._AABB) {

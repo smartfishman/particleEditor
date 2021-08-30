@@ -9,7 +9,7 @@ export class BaseRenderableComp {
         this.compType = RENDERABLE_COMP_TYPE.NORMAL;
         /**是否显示包围盒线框 */
         this.showAABB = false;
-        this._lineColor = new utils.Color(255, 255, 255, 0.5);
+        this._lineColor = new utils.Color(0, 255, 0, 0.5);
         this.compType = type;
         renderableCompMgr.registerRenderableComp(this);
         this._aabbShader = new Webgl2Base(this.getGL());

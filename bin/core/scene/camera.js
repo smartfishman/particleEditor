@@ -4,7 +4,7 @@ import webGLManager from "../render/webGLManager.js";
 import * as webglUtils from "../render/webglUtils.js";
 export class Camera {
     constructor() {
-        this._step = 30 / 60;
+        this._step = 100 / 60;
         this._near = 1;
         this._far = 1000;
         this.screenWidth = 800;
@@ -239,6 +239,7 @@ export class Camera {
             gl.enable(gl.BLEND);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         }
+        gl.clearColor(1, 1, 1, 1);
         gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
     }
     getCurRenderTarget() {

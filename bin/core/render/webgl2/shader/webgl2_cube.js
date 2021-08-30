@@ -11,6 +11,7 @@ export default class Webgl2Cube {
         this.vertexAttributeName1 = "a_position";
         this.vertexAttributeName2 = "a_texcoord";
         this.vertexAttributeName3 = "a_normalVector";
+        this.instancedVertexAttrName = "a_matWorld";
         this.imageUniformName = "u_image2";
         this.initShader();
     }
@@ -21,6 +22,7 @@ export default class Webgl2Cube {
         this.glProgram = webglUtils.createProgram(this.gl, vertexShader, fragShader);
         this.glArrayBuffer = this.gl.createBuffer();
         this.glElementBuffer = this.gl.createBuffer();
+        this.glInstancedBuffer = this.gl.createBuffer();
         this.glTexture = this.gl.createTexture();
         this.initVAO();
         this.initUBO();
@@ -41,12 +43,12 @@ export default class Webgl2Cube {
     initVAO() {
         this.glVAO = this.gl.createVertexArray();
         this.gl.bindVertexArray(this.glVAO);
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glElementBuffer);
         this.initVertexAttribute();
+        this.initInstancedVertexAttr();
+        this.gl.bindVertexArray(null);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
-        this.gl.bindVertexArray(null);
     }
     initUBO() {
         this.glUBOCameraBuffer = this.gl.createBuffer();
@@ -66,50 +68,74 @@ export default class Webgl2Cube {
     }
     /**初始化顶点属性 */
     initVertexAttribute() {
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
         let stride = 32;
         this.gl.bindAttribLocation(this.glProgram, 0, this.vertexAttributeName1);
         this.gl.enableVertexAttribArray(0);
         this.gl.vertexAttribPointer(0, 3, this.gl.FLOAT, false, stride, 0);
+        // this.gl.vertexAttribDivisor(0, 1);
         this.gl.bindAttribLocation(this.glProgram, 1, this.vertexAttributeName2);
         this.gl.enableVertexAttribArray(1);
         this.gl.vertexAttribPointer(1, 2, this.gl.FLOAT, false, stride, 12);
+        // this.gl.vertexAttribDivisor(1, 1);
         this.gl.bindAttribLocation(this.glProgram, 2, this.vertexAttributeName3);
         this.gl.enableVertexAttribArray(2);
         this.gl.vertexAttribPointer(2, 3, this.gl.FLOAT, false, stride, 20);
+        // this.gl.vertexAttribDivisor(2, 1);
+    }
+    initInstancedVertexAttr() {
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glInstancedBuffer);
+        let stride = 64;
+        this.gl.enableVertexAttribArray(3);
+        this.gl.enableVertexAttribArray(4);
+        this.gl.enableVertexAttribArray(5);
+        this.gl.enableVertexAttribArray(6);
+        this.gl.vertexAttribPointer(3, 4, this.gl.FLOAT, false, stride, 0);
+        this.gl.vertexAttribPointer(4, 4, this.gl.FLOAT, false, stride, 16);
+        this.gl.vertexAttribPointer(5, 4, this.gl.FLOAT, false, stride, 32);
+        this.gl.vertexAttribPointer(6, 4, this.gl.FLOAT, false, stride, 48);
+        this.gl.vertexAttribDivisor(3, 1);
+        this.gl.vertexAttribDivisor(4, 1);
+        this.gl.vertexAttribDivisor(5, 1);
+        this.gl.vertexAttribDivisor(6, 1);
     }
     /**
      *
      * @param buffData
-     * @param type 1=ARRAY_BUFFER 2=ELEMENT_ARRAY_BUFFER
+     * @param type 1=ARRAY_BUFFER 2=ELEMENT_ARRAY_BUFFER 3=instancedBuffer
      */
     setBufferData(buffData, type = 1) {
-        this.buffDataLen = buffData.length;
         switch (type) {
             case 1:
                 this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
                 this.gl.bufferData(this.gl.ARRAY_BUFFER, buffData, this.gl.STATIC_DRAW);
-                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+                // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
                 break;
             case 2:
+                this.buffDataLen = buffData.length;
                 this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glElementBuffer);
                 this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, buffData, this.gl.STATIC_DRAW);
-                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+                // this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
+                break;
+            case 3:
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glInstancedBuffer);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, buffData, this.gl.STATIC_DRAW);
                 break;
             default:
                 console.error("unknown type");
                 break;
         }
     }
-    setUniformAttribute(matViewProj, matWorld) {
+    setUniformAttribute(matViewProj) {
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.MAT_VIEW_PROJ_OFFSET * 4, matViewProj);
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_COLOR_OFFSET * 4, new Float32Array([1, 1, 1]));
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_POS_OFFSET * 4, new Float32Array([100, 200, 100]));
         let viewPos = webGLManager.getCamera().getPos();
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.VIEW_POS_OFFSET * 4, new Float32Array([viewPos.x, viewPos.y, viewPos.z]));
-        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
-        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOLocal.MAT_WORLD_OFFSET * 4, matWorld);
-        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
+        // this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
+        // this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOLocal.MAT_WORLD_OFFSET * 4, matWorld);
+        // this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
     }
     _bindTexture(image, textureUnitsOffset, textureObjects, uniformLoc, glTexture) {
         this.gl.activeTexture(this.gl.TEXTURE0 + textureUnitsOffset);
@@ -128,6 +154,10 @@ export default class Webgl2Cube {
     }
     draw() {
         this.gl.drawElements(this.gl.TRIANGLES, this.buffDataLen, this.gl.UNSIGNED_SHORT, 0);
+        this.gl.bindVertexArray(null);
+    }
+    drawElementInstance(instanceCount) {
+        this.gl.drawElementsInstanced(this.gl.TRIANGLES, this.buffDataLen, this.gl.UNSIGNED_SHORT, 0, instanceCount);
         this.gl.bindVertexArray(null);
     }
 }
