@@ -31,9 +31,9 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
         this.webgl2CubeShader.bindState();
         this.webgl2CubeShader.setBufferData(this.model.getVertexData());
         this.webgl2CubeShader.setBufferData(this.model.getIndicesData(), 2);
-        this.webgl2CubeShader.setBufferData(new Float32Array(twoMatWorlds), 3);
+        this.webgl2CubeShader.setBufferData(new Float32Array(matWorld), 3);
         this.webgl2CubeShader.setUniformAttribute(new Float32Array(utils.Mat4.toArray([], camera.matViewProj)));
-        this.webgl2CubeShader.drawElementInstance(2);
+        this.webgl2CubeShader.drawElementInstance(1);
         // this.webgl2CubeShader.draw();
     }
     getAABB() {
@@ -41,7 +41,7 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
             this._AABB = new AABB();
         }
         this._AABB.center = this.node.position;
-        this._AABB.halfExtents = new Vec3(this.node.width / 2, this.node.width / 2, this.node.width / 2);
+        this._AABB.halfExtents = new Vec3(this.node.width / 2 + 5, this.node.width / 2 + 5, this.node.width / 2 + 5);
         return this._AABB;
     }
 }

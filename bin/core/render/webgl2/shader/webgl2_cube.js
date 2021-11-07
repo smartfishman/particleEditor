@@ -30,7 +30,7 @@ export default class Webgl2Cube {
     bindTexture() {
         if (!this.image) {
             this.image = new Image();
-            this.image.src = "http://localhost:3000/images/timg.jpg";
+            this.image.src = "http://101.35.83.93:3000/images/timg.jpg";
             this.image.onload = () => {
                 this._imageLoadIndex--;
             };

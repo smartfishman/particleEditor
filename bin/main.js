@@ -13,6 +13,8 @@ export function gameStart() {
     director.init();
     console.log("gameStart ");
     renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.COORDINATE_SYSTEM);
+    let clothComp = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CLOTH_SYSTEM);
+    clothComp.node.position.y = 150;
     renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CUBE_SYSTEM);
     let comp = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CUBE_SYSTEM);
     comp.node.position.x = 200;
@@ -26,6 +28,7 @@ export function gameStart() {
     let btn = document.getElementById("doBtn");
     btn.onclick = () => {
         particleSystem.updateConfig();
+        clothComp.enableForce();
     };
     canvas.onclick = (event) => {
         webglUtils.GlobalValue.enableLog = true;

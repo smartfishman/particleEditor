@@ -198,5 +198,19 @@ export class AABB {
     copy(a) {
         return AABB.copy(this, a);
     }
+    contain(target) {
+        let min = new Vec3();
+        let max = new Vec3();
+        Vec3.subtract(min, this.center, this.halfExtents);
+        Vec3.add(max, this.center, this.halfExtents);
+        if (target.x >= min.x && target.x <= max.x) {
+            if (target.y >= min.y && target.y <= max.y) {
+                if (target.z >= min.z && target.z <= max.z) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 //# sourceMappingURL=aabb.js.map

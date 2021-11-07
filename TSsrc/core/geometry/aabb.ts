@@ -3,7 +3,7 @@
  * @module geometry
  */
 
-import { Mat3,Mat4, Quat, Vec3, IVec3Like } from '../utils/exports.js';
+import { Mat3, Mat4, Quat, Vec3, IVec3Like } from '../utils/exports.js';
 import enums from './enums.js';
 
 const _v3_tmp = new Vec3();
@@ -132,7 +132,7 @@ export class AABB {
         return AABB.fromPoints(out, _v3_tmp3, _v3_tmp4);
     }
 
-    
+
 
     /**
      * @en
@@ -226,5 +226,20 @@ export class AABB {
      */
     public copy(a: AABB): AABB {
         return AABB.copy(this, a);
+    }
+
+    public contain(target: Vec3): boolean {
+        let min: Vec3 = new Vec3();
+        let max: Vec3 = new Vec3();
+        Vec3.subtract(min, this.center, this.halfExtents);
+        Vec3.add(max, this.center, this.halfExtents);
+        if (target.x >= min.x && target.x <= max.x) {
+            if (target.y >= min.y && target.y <= max.y) {
+                if (target.z >= min.z && target.z <= max.z) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

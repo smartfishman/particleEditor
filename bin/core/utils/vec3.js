@@ -213,5 +213,13 @@ export class Vec3 {
         this.z = this.z * scalar;
         return this;
     }
+    /**
+     * @en Returns the length of this vector.
+     * @zh 计算向量的长度（模）。
+     * @returns Length of vector
+     */
+    length() {
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
 }
 //# sourceMappingURL=vec3.js.map

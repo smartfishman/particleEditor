@@ -256,6 +256,15 @@ export class Vec3 {
         this.z = this.z * scalar;
         return this;
     }
+
+    /**
+     * @en Returns the length of this vector.
+     * @zh 计算向量的长度（模）。
+     * @returns Length of vector
+     */
+     public length () {
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
 }
 
 export interface IVec3Like {
