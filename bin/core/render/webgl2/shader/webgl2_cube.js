@@ -30,7 +30,7 @@ export default class Webgl2Cube {
     bindTexture() {
         if (!this.image) {
             this.image = new Image();
-            this.image.src = "http://101.35.83.93:3000/images/timg.jpg";
+            this.image.src = "http://localhost:3000/images/timg.jpg";
             this.image.onload = () => {
                 this._imageLoadIndex--;
             };
@@ -51,14 +51,16 @@ export default class Webgl2Cube {
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
     }
     initUBO() {
-        this.glUBOCameraBuffer = this.gl.createBuffer();
+        // this.glUBOCameraBuffer = this.gl.createBuffer();
+        this.glUBOCameraBuffer = webGLManager.getUniformBufferByBindings(UBOCamera.BINDING);
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
         this.gl.bufferData(this.gl.UNIFORM_BUFFER, UBOCamera.SIZE, this.gl.STATIC_DRAW);
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
         this.gl.bindBufferBase(this.gl.UNIFORM_BUFFER, UBOCamera.BINDING, this.glUBOCameraBuffer);
         let uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOCamera.NAME);
         this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOCamera.BINDING);
-        this.glUBOLocalBuffer = this.gl.createBuffer();
+        // this.glUBOLocalBuffer = this.gl.createBuffer();
+        this.glUBOLocalBuffer = webGLManager.getUniformBufferByBindings(UBOLocal.BINDING);
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
         this.gl.bufferData(this.gl.UNIFORM_BUFFER, UBOLocal.SIZE, this.gl.STATIC_DRAW);
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);

@@ -20,10 +20,6 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
         this.model = new CubeModel();
     }
 
-    public getGL(): WebGLRenderingContext {
-        return webGLManager.getWebGLRenderingContext();
-    }
-
     public update(dt: number): void {
         super.update(dt);
         this.model.updateVertexData(this.node);

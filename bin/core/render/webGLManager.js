@@ -102,6 +102,15 @@ class WebGLManager {
             }
         }
     }
+    getUniformBufferByBindings(binding) {
+        if (!this._uniformBuffer) {
+            this._uniformBuffer = {};
+        }
+        if (!this._uniformBuffer[binding]) {
+            this._uniformBuffer[binding] = this._gl.createBuffer();
+        }
+        return this._uniformBuffer[binding];
+    }
 }
 let webGLManager = WebGLManager.getInstance();
 export default webGLManager;

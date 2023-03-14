@@ -2,44 +2,19 @@ import { data as shaderAssetData } from "../../../../../lib/shaderAssets/shaderA
 import webGLManager from "../../webGLManager.js";
 import * as webglUtils from "../../webglUtils.js";
 import { UBOCamera, UBOLocal } from "./defines/constantsDefine.js";
-
-export default class Webgl2Cube {
-    private gl: WebGL2RenderingContext;
-    private glProgram: WebGLProgram;
-
-    private vertexShaderSource: string;
-    private fragShaderSource: string;
-    private vertexAttributeName1: string;
-    private vertexAttributeName2: string;
-    private vertexAttributeName3: string;
-    private instancedVertexAttrName: string;
-    private imageUniformName: string;
-
-    private image: HTMLImageElement;
-    private buffDataLen: number;
-
-    private glArrayBuffer: WebGLBuffer;
-    private glElementBuffer: WebGLBuffer;
-    private glInstancedBuffer: WebGLBuffer;
-    private glTexture: WebGLTexture;
-    private glVAO: WebGLVertexArrayObject;
-    private glUBOCameraBuffer: WebGLBuffer;
-    private glUBOLocalBuffer: WebGLBuffer;
-
-    constructor(gl: WebGLRenderingContext) {
-        this.gl = gl as WebGL2RenderingContext;
-        this.vertexShaderSource = shaderAssetData["standard/standard_vert"];
-        this.fragShaderSource = shaderAssetData["standard/standard_frag"];
+export default class Webgl2HeatDiffusion {
+    constructor(gl) {
+        this._imageLoadIndex = 1;
+        this.gl = gl;
+        this.vertexShaderSource = shaderAssetData["heatDiffusion/heat_diffusion_vert"];
+        this.fragShaderSource = shaderAssetData["heatDiffusion/heat_diffusion_frag"];
         this.vertexAttributeName1 = "a_position";
-        this.vertexAttributeName2 = "a_texcoord";
-        this.vertexAttributeName3 = "a_normalVector";
-        this.instancedVertexAttrName = "a_matWorld";
+        this.vertexAttributeName2 = "a_normalVector";
         this.imageUniformName = "u_image2";
         this.initShader();
     }
-
     /**初始化着色器 */
-    private initShader(): void {
+    initShader() {
         let vertexShader = webglUtils.createShader(this.gl, this.gl.VERTEX_SHADER, this.vertexShaderSource);
         let fragShader = webglUtils.createShader(this.gl, this.gl.FRAGMENT_SHADER, this.fragShaderSource);
         this.glProgram = webglUtils.createProgram(this.gl, vertexShader, fragShader);
@@ -50,9 +25,7 @@ export default class Webgl2Cube {
         this.initVAO();
         this.initUBO();
     }
-
-    private _imageLoadIndex = 1;
-    private bindTexture(): void {
+    bindTexture() {
         if (!this.image) {
             this.image = new Image();
             this.image.src = "http://localhost:3000/images/timg.jpg";
@@ -65,8 +38,7 @@ export default class Webgl2Cube {
             this._bindTexture(this.image, 1, this.gl.TEXTURE_2D, loc, this.glTexture);
         }
     }
-
-    private initVAO(): void {
+    initVAO() {
         this.glVAO = this.gl.createVertexArray();
         this.gl.bindVertexArray(this.glVAO);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glElementBuffer);
@@ -76,8 +48,7 @@ export default class Webgl2Cube {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
     }
-
-    private initUBO(): void {
+    initUBO() {
         // this.glUBOCameraBuffer = this.gl.createBuffer();
         this.glUBOCameraBuffer = webGLManager.getUniformBufferByBindings(UBOCamera.BINDING);
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
@@ -86,7 +57,6 @@ export default class Webgl2Cube {
         this.gl.bindBufferBase(this.gl.UNIFORM_BUFFER, UBOCamera.BINDING, this.glUBOCameraBuffer);
         let uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOCamera.NAME);
         this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOCamera.BINDING);
-
         // this.glUBOLocalBuffer = this.gl.createBuffer();
         this.glUBOLocalBuffer = webGLManager.getUniformBufferByBindings(UBOLocal.BINDING);
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
@@ -96,50 +66,42 @@ export default class Webgl2Cube {
         uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOLocal.NAME);
         this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOLocal.BINDING);
     }
-
     /**初始化顶点属性 */
-    private initVertexAttribute(): void {
+    initVertexAttribute() {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
-        let stride = 32;
+        let stride = 24;
         this.gl.bindAttribLocation(this.glProgram, 0, this.vertexAttributeName1);
         this.gl.enableVertexAttribArray(0);
         this.gl.vertexAttribPointer(0, 3, this.gl.FLOAT, false, stride, 0);
-        // this.gl.vertexAttribDivisor(0, 1);
-
         this.gl.bindAttribLocation(this.glProgram, 1, this.vertexAttributeName2);
         this.gl.enableVertexAttribArray(1);
-        this.gl.vertexAttribPointer(1, 2, this.gl.FLOAT, false, stride, 12);
-        // this.gl.vertexAttribDivisor(1, 1);
-
-        this.gl.bindAttribLocation(this.glProgram, 2, this.vertexAttributeName3);
-        this.gl.enableVertexAttribArray(2);
-        this.gl.vertexAttribPointer(2, 3, this.gl.FLOAT, false, stride, 20);
-        // this.gl.vertexAttribDivisor(2, 1);
+        this.gl.vertexAttribPointer(1, 3, this.gl.FLOAT, false, stride, 12);
     }
-
-    private initInstancedVertexAttr(): void {
+    initInstancedVertexAttr() {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glInstancedBuffer);
-        let stride = 64;
+        let stride = 76;
         this.gl.enableVertexAttribArray(3);
         this.gl.enableVertexAttribArray(4);
         this.gl.enableVertexAttribArray(5);
         this.gl.enableVertexAttribArray(6);
+        this.gl.enableVertexAttribArray(7);
         this.gl.vertexAttribPointer(3, 4, this.gl.FLOAT, false, stride, 0);
         this.gl.vertexAttribPointer(4, 4, this.gl.FLOAT, false, stride, 16);
         this.gl.vertexAttribPointer(5, 4, this.gl.FLOAT, false, stride, 32);
         this.gl.vertexAttribPointer(6, 4, this.gl.FLOAT, false, stride, 48);
+        this.gl.vertexAttribPointer(7, 3, this.gl.FLOAT, false, stride, 64);
         this.gl.vertexAttribDivisor(3, 1);
         this.gl.vertexAttribDivisor(4, 1);
         this.gl.vertexAttribDivisor(5, 1);
         this.gl.vertexAttribDivisor(6, 1);
+        this.gl.vertexAttribDivisor(7, 1);
     }
-
     /**
-     * 
-     * @param buffData 
+     *
+     * @param buffData
      * @param type 1=ARRAY_BUFFER 2=ELEMENT_ARRAY_BUFFER 3=instancedBuffer
      */
-    public setBufferData(buffData: Float32Array | Int16Array, type: number = 1): void {
+    setBufferData(buffData, type = 1) {
         switch (type) {
             case 1:
                 this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
@@ -160,24 +122,19 @@ export default class Webgl2Cube {
                 console.error("unknown type");
                 break;
         }
-
     }
-
-    public setUniformAttribute(matViewProj: Float32Array): void {
+    setUniformAttribute(matViewProj) {
         this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.MAT_VIEW_PROJ_OFFSET * 4, matViewProj);
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_COLOR_OFFSET * 4, new Float32Array([1, 1, 1]));
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_POS_OFFSET * 4, new Float32Array([100, 200, 100]));
         let viewPos = webGLManager.getCamera().getPos();
         this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.VIEW_POS_OFFSET * 4, new Float32Array([viewPos.x, viewPos.y, viewPos.z]));
-
         // this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
         // this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOLocal.MAT_WORLD_OFFSET * 4, matWorld);
-
         // this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
     }
-
-    private _bindTexture(image: TexImageSource, textureUnitsOffset: number, textureObjects: number, uniformLoc: WebGLUniformLocation, glTexture: WebGLTexture): void {
+    _bindTexture(image, textureUnitsOffset, textureObjects, uniformLoc, glTexture) {
         this.gl.activeTexture(this.gl.TEXTURE0 + textureUnitsOffset);
         this.gl.bindTexture(textureObjects, glTexture);
         this.gl.texParameteri(textureObjects, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
@@ -187,20 +144,18 @@ export default class Webgl2Cube {
         this.gl.texImage2D(textureObjects, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
         this.gl.uniform1i(uniformLoc, textureUnitsOffset);
     }
-
-    public bindState(): void {
+    bindState() {
         webGLManager.useProgram(this.glProgram);
         this.gl.bindVertexArray(this.glVAO);
         this.bindTexture();
     }
-
-    public draw(): void {
+    draw() {
         this.gl.drawElements(this.gl.TRIANGLES, this.buffDataLen, this.gl.UNSIGNED_SHORT, 0);
         this.gl.bindVertexArray(null);
     }
-
-    public drawElementInstance(instanceCount: number): void {
+    drawElementInstance(instanceCount) {
         this.gl.drawElementsInstanced(this.gl.TRIANGLES, this.buffDataLen, this.gl.UNSIGNED_SHORT, 0, instanceCount);
         this.gl.bindVertexArray(null);
     }
 }
+//# sourceMappingURL=webgl2_heat_diffusion.js.map

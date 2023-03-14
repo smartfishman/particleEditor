@@ -20,7 +20,7 @@ var COLOR;
     COLOR[COLOR["BLACK"] = 1] = "BLACK";
 })(COLOR || (COLOR = {}));
 function createIntersection(first, second) {
-    let result;
+    let result = {};
     for (let id in first) {
         result[id] = first[id];
     }
@@ -47,13 +47,19 @@ class TestC {
         this.attr3 = 2;
     }
 }
-let a = createIntersection(new TestA(), new TestB());
+let a = createIntersection(new TestA(), null);
+let d = new TestA();
 let aa;
-if (isTestA(aa)) {
-    let b = aa.attr1;
+if (isTestA(a)) {
+    let b = a.attr1;
+    console.log("111111111111111111");
 }
 else {
-    let c = aa;
+    let c = a;
+    console.log("2222222222222222222222222");
 }
+let aaa = [];
+let bbb = aaa.values();
+let ccc = bbb.next();
 export {};
 //# sourceMappingURL=redBlackTree.js.map

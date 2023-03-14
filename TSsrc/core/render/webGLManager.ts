@@ -6,6 +6,7 @@ import Utils from "../utils/utils.js";
 import { Vec2 } from "../utils/vec2.js";
 import { Vec3 } from "../utils/vec3.js";
 import { Vec4 } from "../utils/vec4.js";
+import { PipelineGlobalBindings } from "./webgl2/shader/defines/constantsDefine.js";
 import * as webglUtils from "./webglUtils.js";
 
 class WebGLManager {
@@ -20,6 +21,7 @@ class WebGLManager {
     private _canvas: HTMLCanvasElement;
     private _gl: WebGL2RenderingContext;
     private _camera: Camera;
+    private _uniformBuffer: { [key in PipelineGlobalBindings]: WebGLBuffer };
 
     public currentGlProgram: WebGLProgram;
 
@@ -97,7 +99,7 @@ class WebGLManager {
             let depth = webglUtils.LinearizeDepth(depthData[0], this.getCamera().near, this.getCamera().far);
             console.log(depthData[0], depth);
             webglUtils.GlobalValue.enableLog = false;
-            
+
             let pos = new Vec4();
             let cvvXY = new Vec2();
             webglUtils.screenPointToCVV(cvvXY, webglUtils.GlobalValue.testX, webglUtils.GlobalValue.testY);
@@ -122,6 +124,16 @@ class WebGLManager {
                 nearestComp.showAABB = true;
             }
         }
+    }
+
+    public getUniformBufferByBindings(binding: PipelineGlobalBindings) {
+        if (!this._uniformBuffer) {
+            this._uniformBuffer = {} as { [key in PipelineGlobalBindings]: WebGLBuffer };
+        }
+        if (!this._uniformBuffer[binding]) {
+            this._uniformBuffer[binding] = this._gl.createBuffer();
+        }
+        return this._uniformBuffer[binding];
     }
 }
 

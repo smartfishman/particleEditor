@@ -3,6 +3,8 @@ export declare let data: {
     base_vert: string;
     "coordinateSystem/coordinateSystem_frag": string;
     "coordinateSystem/coordinateSystem_vert": string;
+    "heatDiffusion/heat_diffusion_frag": string;
+    "heatDiffusion/heat_diffusion_vert": string;
     "particle/particle_frag": string;
     "particle/particle_vert": string;
     "standard/standard_frag": string;

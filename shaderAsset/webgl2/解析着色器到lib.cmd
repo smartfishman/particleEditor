@@ -1,3 +1,3 @@
-python "D:\MyFile\nodejs_workplace\webglTest\webgl_test\public\Á£×ÓÌØÐ§±à¼­Æ÷\particleEditor\shaderAsset\webgl2\complingShader.py"
+python "D:\MyFile\nodejs_workplace\webglTest\webgl_test\public\peTest\particleEditor\shaderAsset\webgl2\complingShader.py"
 tsc
 pause

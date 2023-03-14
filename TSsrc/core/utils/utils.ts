@@ -7,4 +7,13 @@ export default class Utils {
         out.y = canvas.offsetTop + canvas.height - point.y;
         return out;
     }
+
+    public static makeTranslation(tx, ty, tz): number[] {
+        return [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            tx, ty, tz, 1
+        ];
+    }
 }

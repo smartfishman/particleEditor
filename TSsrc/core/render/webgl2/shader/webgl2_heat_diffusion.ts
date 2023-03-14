@@ -3,7 +3,7 @@ import webGLManager from "../../webGLManager.js";
 import * as webglUtils from "../../webglUtils.js";
 import { UBOCamera, UBOLocal } from "./defines/constantsDefine.js";
 
-export default class Webgl2Cube {
+export default class Webgl2HeatDiffusion {
     private gl: WebGL2RenderingContext;
     private glProgram: WebGLProgram;
 
@@ -11,8 +11,6 @@ export default class Webgl2Cube {
     private fragShaderSource: string;
     private vertexAttributeName1: string;
     private vertexAttributeName2: string;
-    private vertexAttributeName3: string;
-    private instancedVertexAttrName: string;
     private imageUniformName: string;
 
     private image: HTMLImageElement;
@@ -28,12 +26,10 @@ export default class Webgl2Cube {
 
     constructor(gl: WebGLRenderingContext) {
         this.gl = gl as WebGL2RenderingContext;
-        this.vertexShaderSource = shaderAssetData["standard/standard_vert"];
-        this.fragShaderSource = shaderAssetData["standard/standard_frag"];
+        this.vertexShaderSource = shaderAssetData["heatDiffusion/heat_diffusion_vert"];
+        this.fragShaderSource = shaderAssetData["heatDiffusion/heat_diffusion_frag"];
         this.vertexAttributeName1 = "a_position";
-        this.vertexAttributeName2 = "a_texcoord";
-        this.vertexAttributeName3 = "a_normalVector";
-        this.instancedVertexAttrName = "a_matWorld";
+        this.vertexAttributeName2 = "a_normalVector";
         this.imageUniformName = "u_image2";
         this.initShader();
     }
@@ -100,38 +96,34 @@ export default class Webgl2Cube {
     /**初始化顶点属性 */
     private initVertexAttribute(): void {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glArrayBuffer);
-        let stride = 32;
+        let stride = 24;
         this.gl.bindAttribLocation(this.glProgram, 0, this.vertexAttributeName1);
         this.gl.enableVertexAttribArray(0);
         this.gl.vertexAttribPointer(0, 3, this.gl.FLOAT, false, stride, 0);
-        // this.gl.vertexAttribDivisor(0, 1);
 
         this.gl.bindAttribLocation(this.glProgram, 1, this.vertexAttributeName2);
         this.gl.enableVertexAttribArray(1);
-        this.gl.vertexAttribPointer(1, 2, this.gl.FLOAT, false, stride, 12);
-        // this.gl.vertexAttribDivisor(1, 1);
-
-        this.gl.bindAttribLocation(this.glProgram, 2, this.vertexAttributeName3);
-        this.gl.enableVertexAttribArray(2);
-        this.gl.vertexAttribPointer(2, 3, this.gl.FLOAT, false, stride, 20);
-        // this.gl.vertexAttribDivisor(2, 1);
+        this.gl.vertexAttribPointer(1, 3, this.gl.FLOAT, false, stride, 12);
     }
 
     private initInstancedVertexAttr(): void {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glInstancedBuffer);
-        let stride = 64;
+        let stride = 76;
         this.gl.enableVertexAttribArray(3);
         this.gl.enableVertexAttribArray(4);
         this.gl.enableVertexAttribArray(5);
         this.gl.enableVertexAttribArray(6);
+        this.gl.enableVertexAttribArray(7);
         this.gl.vertexAttribPointer(3, 4, this.gl.FLOAT, false, stride, 0);
         this.gl.vertexAttribPointer(4, 4, this.gl.FLOAT, false, stride, 16);
         this.gl.vertexAttribPointer(5, 4, this.gl.FLOAT, false, stride, 32);
         this.gl.vertexAttribPointer(6, 4, this.gl.FLOAT, false, stride, 48);
+        this.gl.vertexAttribPointer(7, 3, this.gl.FLOAT, false, stride, 64);
         this.gl.vertexAttribDivisor(3, 1);
         this.gl.vertexAttribDivisor(4, 1);
         this.gl.vertexAttribDivisor(5, 1);
         this.gl.vertexAttribDivisor(6, 1);
+        this.gl.vertexAttribDivisor(7, 1);
     }
 
     /**

@@ -25,6 +25,8 @@ export function gameStart() {
     comp.node.position.x = 200;
     let particleSystem: WebGl2ParticleSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.PARTICLE_SYSTEM) as WebGl2ParticleSystem;
 
+    let heatDiffusionSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.HEAT_DIFFUSION_SYSTEM);
+
     let lastTime = timeManager.getTime();
     setInterval(() => {
         let dt = timeManager.getTime() - lastTime;

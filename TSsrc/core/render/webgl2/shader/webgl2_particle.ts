@@ -78,12 +78,12 @@ export default class Webgl2Particle {
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glElementBuffer);
         if (!this.image) {
             this.image = new Image();
-            this.image.src = "http://101.35.83.93:3000/images/peach.png";
+            this.image.src = "http://localhost:3000/images/peach.png";
             this.image.onload = () => {
                 this._imageLoadIndex--;
             };
             this.fontImage = new Image();
-            this.fontImage.src = "http://101.35.83.93:3000/images/font.png";
+            this.fontImage.src = "http://localhost:3000/images/font.png";
             this.fontImage.onload = () => {
                 this._imageLoadIndex--;
             };

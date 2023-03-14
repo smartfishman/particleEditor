@@ -4,7 +4,7 @@ import { Uniform, UniformBlock, Type } from "./glslObject.js";
  * @en The uniform bindings
  * @zh Uniform 参数绑定。
  */
-export enum PipelineGlobalBindings {
+export enum PipelineGlobalBindings{
     UBO_CAMERA,
     UBO_GLOBAL,
     UBO_LOCAL,

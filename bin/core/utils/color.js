@@ -13,5 +13,8 @@ export class Color {
     glRGBA() {
         return [this.R / 255, this.G / 255, this.B / 255, this.A];
     }
+    glRGB() {
+        return [this.R / 255, this.G / 255, this.B / 255];
+    }
 }
 //# sourceMappingURL=color.js.map

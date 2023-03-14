@@ -34,4 +34,8 @@ export class Color {
     public glRGBA(): number[] {
         return [this.R/255, this.G/255, this.B/255, this.A];
     }
+
+    public glRGB(): number[] {
+        return [this.R/255, this.G/255, this.B/255];
+    }
 }
