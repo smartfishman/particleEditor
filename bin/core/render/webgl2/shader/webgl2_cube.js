@@ -28,17 +28,31 @@ export default class Webgl2Cube {
         this.initUBO();
     }
     bindTexture() {
-        if (!this.image) {
-            this.image = new Image();
-            this.image.src = "http://localhost:3000/images/timg.jpg";
-            this.image.onload = () => {
-                this._imageLoadIndex--;
-            };
-        }
-        if (this._imageLoadIndex <= 0) {
+        // if (!this.image) {
+        //     // this.image = new Image();
+        //     // this.image.src = "http://localhost:3000/images/timg.jpg";
+        //     // this.image.onload = () => {
+        //     //     this._imageLoadIndex--;
+        //     // };
+        //     let arrData = [];
+        //     for (let i = 0; i < 100 * 100; i++) {
+        //         let color = i < 100 * 50 ? 100 : 0;
+        //         arrData[4 * i + 0] = color;
+        //         arrData[4 * i + 1] = color;
+        //         arrData[4 * i + 2] = color;
+        //         arrData[4 * i + 3] = 255;
+        //     }
+        //     let clampedData = Uint8ClampedArray.from(arrData);
+        //     this.image = new ImageData(clampedData,100,100);
+        //     this._imageLoadIndex--;
+        // }
+        if (this.image) {
             let loc = this.gl.getUniformLocation(this.glProgram, this.imageUniformName);
             this._bindTexture(this.image, 1, this.gl.TEXTURE_2D, loc, this.glTexture);
         }
+    }
+    setImageData(data) {
+        this.image = data;
     }
     initVAO() {
         this.glVAO = this.gl.createVertexArray();

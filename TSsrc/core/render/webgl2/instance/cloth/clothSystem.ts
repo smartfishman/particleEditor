@@ -10,7 +10,7 @@ import { BaseNode } from "../baseNode.js";
 export class Webgl2ClothSystem extends BaseRenderableComp {
     private webgl2StandardShader: Webgl2Cube;
     private model: ClothModel;
-
+    
     constructor() {
         super();
         this.webgl2StandardShader = new Webgl2Cube(this.getGL());

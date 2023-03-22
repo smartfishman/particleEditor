@@ -6,6 +6,7 @@
     "configurations": [
         {
             "name": "Launch Chrome",
+            "preLaunchTask": "tsc: build - tsconfig.json",
             "request": "launch",
             "type": "pwa-chrome",
             "url": "http://localhost:3000/peTest/particleEditor/main.html",
