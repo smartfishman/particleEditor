@@ -10,6 +10,8 @@ import { BaseNode } from "../baseNode.js";
 export class Webgl2ClothSystem extends BaseRenderableComp {
     private webgl2StandardShader: Webgl2Cube;
     private model: ClothModel;
+
+    private _image: TexImageSource;
     
     constructor() {
         super();
@@ -20,6 +22,7 @@ export class Webgl2ClothSystem extends BaseRenderableComp {
         this.model = new ClothModel();
         this.model.updateVertexData(this.node);
         this.model.parentComp = this;
+        this.initImage();
     }
 
     public getGL(): WebGLRenderingContext {
@@ -29,6 +32,7 @@ export class Webgl2ClothSystem extends BaseRenderableComp {
     public update(dt: number): void {
         super.update(dt);
         this.model.updateByForce(dt);
+        this.webgl2StandardShader.setImageData(this._image);
     }
 
     public draw(): void {
@@ -58,6 +62,26 @@ export class Webgl2ClothSystem extends BaseRenderableComp {
 
     public enableForce(): void {
         this.model.enableForceForEveryVertex(new Vec3(0, -10, 0));
+    }
+
+    private initImage() {
+        // if (!this._imageCfg) {
+        //     this._imageCfg = new Uint8ClampedArray(this._imageWidth * this._imageWidth * 4);
+
+        //     for (let i = 0; i < this._imageWidth * this._imageWidth; i++) {
+        //         this._imageCfg[4 * i + 0] = 0;
+        //         this._imageCfg[4 * i + 1] = 0;
+        //         this._imageCfg[4 * i + 2] = 255;
+        //         this._imageCfg[4 * i + 3] = 1;
+        //     }
+        // }
+        // this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+
+        let image = new Image();
+        image.src = "http://localhost:3000/images/timg.jpg";
+        image.onload = () => {
+            this._image = image;
+        };
     }
 }
 

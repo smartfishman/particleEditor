@@ -38,7 +38,7 @@ void main() {
 
     float nowX = v_fragLocalPos.x;
     float nowZ = v_fragLocalPos.z;
-    float lineWidth = 3.0;
+    float lineWidth = 0.5;
 
     float expectZ = sin(2.0*pi*nowX/v_rectWidth)*v_rectWidth/2.0;
 

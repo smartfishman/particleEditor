@@ -253,5 +253,16 @@ export class Camera {
             return this.targetTexture;
         }
     }
+    resetViewPos() {
+        this._pos = new utils.Vec3(100, 400, -300);
+        this._rot = new utils.Quat();
+        let radY = 0;
+        let radX = Math.PI / 2;
+        utils.Quat.rotateAround2(this._rot, this._rot, new utils.Vec3(0, 1, 0), -radY);
+        // utils.Quat.rotateY(this._rot, this._rot, -radY);
+        utils.Quat.rotateX(this._rot, this._rot, -radX);
+        this.updateForward();
+        this.dirtyFlag = true;
+    }
 }
 //# sourceMappingURL=camera.js.map

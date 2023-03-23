@@ -32,6 +32,10 @@ export function gameStart() {
         particleSystem.updateConfig();
         clothComp.enableForce();
     };
+    let resetCurve = document.getElementById("resetToCurve");
+    resetCurve.onclick = () => {
+        webGLManager.getCamera().resetViewPos();
+    };
     canvas.onclick = (event) => {
         webglUtils.GlobalValue.enableLog = true;
         webglUtils.GlobalValue.testX = event.offsetX;

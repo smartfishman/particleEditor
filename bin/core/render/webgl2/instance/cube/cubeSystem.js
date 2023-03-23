@@ -1,6 +1,6 @@
 import webGLManager from "../../../webGLManager.js";
 import * as utils from "../../../../utils/exports.js";
-import { Color, Vec3 } from "../../../../utils/exports.js";
+import { Vec3 } from "../../../../utils/exports.js";
 import { BaseNode } from "../baseNode.js";
 import { CubeModel } from "../../model/cube_model.js";
 import Webgl2Cube from "../../shader/webgl2_cube.js";
@@ -46,25 +46,30 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
         return this._AABB;
     }
     initImage() {
-        if (!this._imageCfg) {
-            this._imageCfg = new Uint8ClampedArray(this._imageWidth * this._imageWidth * 4);
-            for (let i = 0; i < this._imageWidth * this._imageWidth; i++) {
-                this._imageCfg[4 * i + 0] = 0;
-                this._imageCfg[4 * i + 1] = 0;
-                this._imageCfg[4 * i + 2] = 255;
-                this._imageCfg[4 * i + 3] = 1;
-            }
-        }
-        this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+        // if (!this._imageCfg) {
+        //     this._imageCfg = new Uint8ClampedArray(this._imageWidth * this._imageWidth * 4);
+        //     for (let i = 0; i < this._imageWidth * this._imageWidth; i++) {
+        //         this._imageCfg[4 * i + 0] = 0;
+        //         this._imageCfg[4 * i + 1] = 0;
+        //         this._imageCfg[4 * i + 2] = 255;
+        //         this._imageCfg[4 * i + 3] = 1;
+        //     }
+        // }
+        // this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+        let image = new Image();
+        image.src = "http://localhost:3000/images/timg.jpg";
+        image.onload = () => {
+            this._image = image;
+        };
     }
     updateImage(dt) {
-        let penColor = new Color(255, 255, 255, 1);
-        for (let i = 0; i < this._imageWidth; i++) {
-            let x = i;
-            let y = Math.sin(Math.PI * 2 * x / this._imageWidth) * (this._imageWidth / 4) + (this._imageWidth / 2);
-            updateClampedArrayData(x / this._imageWidth, (this._imageWidth - y) / this._imageWidth, penColor, this._imageCfg);
-        }
-        this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+        // let penColor = new Color(255, 255, 255, 1);
+        // for (let i = 0; i < this._imageWidth; i++) {
+        //     let x = i;
+        //     let y = Math.sin(Math.PI * 2 * x / this._imageWidth) * (this._imageWidth / 4) + (this._imageWidth / 2);
+        //     updateClampedArrayData(x / this._imageWidth, (this._imageWidth - y) / this._imageWidth, penColor, this._imageCfg);
+        // }
+        // this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
     }
 }
 function makeTranslation(tx, ty, tz) {

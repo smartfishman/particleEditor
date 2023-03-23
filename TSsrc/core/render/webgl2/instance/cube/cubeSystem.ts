@@ -11,7 +11,7 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
     private webgl2CubeShader: Webgl2Cube;
     private model: CubeModel;
 
-    private _image: ImageData;
+    private _image: TexImageSource;
     private _imageCfg: Uint8ClampedArray;
     private _imageWidth: number = 1000;
 
@@ -58,27 +58,34 @@ export class Webgl2CubeSystem extends BaseRenderableComp {
     }
 
     private initImage() {
-        if (!this._imageCfg) {
-            this._imageCfg = new Uint8ClampedArray(this._imageWidth * this._imageWidth * 4);
+        // if (!this._imageCfg) {
+        //     this._imageCfg = new Uint8ClampedArray(this._imageWidth * this._imageWidth * 4);
 
-            for (let i = 0; i < this._imageWidth * this._imageWidth; i++) {
-                this._imageCfg[4 * i + 0] = 0;
-                this._imageCfg[4 * i + 1] = 0;
-                this._imageCfg[4 * i + 2] = 255;
-                this._imageCfg[4 * i + 3] = 1;
-            }
-        }
-        this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+        //     for (let i = 0; i < this._imageWidth * this._imageWidth; i++) {
+        //         this._imageCfg[4 * i + 0] = 0;
+        //         this._imageCfg[4 * i + 1] = 0;
+        //         this._imageCfg[4 * i + 2] = 255;
+        //         this._imageCfg[4 * i + 3] = 1;
+        //     }
+        // }
+        // this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+
+        let image = new Image();
+        image.src = "http://localhost:3000/images/timg.jpg";
+        image.onload = () => {
+            this._image = image;
+        };
     }
 
     private updateImage(dt: number) {
-        let penColor = new Color(255, 255, 255, 1);
-        for (let i = 0; i < this._imageWidth; i++) {
-            let x = i;
-            let y = Math.sin(Math.PI * 2 * x / this._imageWidth) * (this._imageWidth / 4) + (this._imageWidth / 2);
-            updateClampedArrayData(x / this._imageWidth, (this._imageWidth - y) / this._imageWidth, penColor, this._imageCfg);
-        }
-        this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+        // let penColor = new Color(255, 255, 255, 1);
+        // for (let i = 0; i < this._imageWidth; i++) {
+        //     let x = i;
+        //     let y = Math.sin(Math.PI * 2 * x / this._imageWidth) * (this._imageWidth / 4) + (this._imageWidth / 2);
+        //     updateClampedArrayData(x / this._imageWidth, (this._imageWidth - y) / this._imageWidth, penColor, this._imageCfg);
+        // }
+        // this._image = new ImageData(this._imageCfg, this._imageWidth, this._imageWidth);
+        
     }
 }
 
