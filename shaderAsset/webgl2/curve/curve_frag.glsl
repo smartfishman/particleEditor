@@ -18,6 +18,8 @@ layout(std140) uniform AAALocal {
 in vec3 v_fragWorldPos;
 in vec3 v_normalVector;
 in vec3 v_specialColor;
+in vec3 v_fragLocalPos;
+in float v_rectWidth;
 
 out vec4 fragColor;
 
@@ -29,26 +31,20 @@ float LinearizeDepth(float depth) {
 }
 
 void main() {
-    //环境光
-    float ambientStrength = 0.1;
-    vec3 ambient = ambientStrength * lightColor;
+    vec4 defaultColor = vec4(0.0,0.0,1.0,1.0);
+    vec4 lineColor = vec4(1.0,1.0,0.0,1.0);
 
-    //漫反射光
-    vec3 norm = normalize(v_normalVector);
-    vec3 lightDir = normalize(lightPos - v_fragWorldPos);
-    float diff = max(dot(norm, lightDir), 0.0);         // 点乘
-    vec3 diffuse = diff * lightColor;
+    float pi = 3.1415926;
 
-    //镜面反射光
-    float specularStrength = 0.5;
-    vec3 viewDir = normalize(viewPos - v_fragWorldPos);    // 视线方向坐标
-    vec3 reflectDir = reflect(-lightDir, norm);         // 使用reflect函数计算反射光坐标
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-    vec3 specular = specularStrength * spec * lightColor;
+    float nowX = v_fragLocalPos.x;
+    float nowZ = v_fragLocalPos.z;
+    float lineWidth = 3.0;
 
-    //vec3 objectColor = texture(u_image2, v_texcoord).rgb;
-    vec3 result = (ambient + diffuse + specular) * v_specialColor.rgb;
-    vec4 color = vec4(result, 1.0);
+    float expectZ = sin(2.0*pi*nowX/v_rectWidth)*v_rectWidth/2.0;
 
-    fragColor = v_specialColor;
+    if(abs(nowZ - expectZ)<lineWidth){
+        fragColor = lineColor;
+    }else{
+        fragColor = defaultColor;
+    }
 }

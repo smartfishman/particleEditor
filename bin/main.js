@@ -20,6 +20,7 @@ export function gameStart() {
     comp.node.position.x = 200;
     let particleSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.PARTICLE_SYSTEM);
     let heatDiffusionSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.HEAT_DIFFUSION_SYSTEM);
+    let curveSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CURVE_SYSTEM);
     let lastTime = timeManager.getTime();
     setInterval(() => {
         let dt = timeManager.getTime() - lastTime;

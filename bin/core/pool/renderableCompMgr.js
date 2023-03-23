@@ -3,6 +3,7 @@ import { RENDERABLE_COMP_SYSTEM_TYPE, RENDERABLE_COMP_TYPES_NORMAL_RENDER } from
 import { Webgl2ClothSystem } from "../render/webgl2/instance/cloth/clothSystem.js";
 import { WebGL2CoordinateSystem } from "../render/webgl2/instance/coordinate/webGL2CoordinateSystem.js";
 import { Webgl2CubeSystem } from "../render/webgl2/instance/cube/cubeSystem.js";
+import { Webgl2CurveSystem } from "../render/webgl2/instance/curve/curveSystem.js";
 import { WebGL2TestFrameBufferSystem } from "../render/webgl2/instance/frameBuffer/webGL2TestFrameBufferSystem.js";
 import { Webgl2HeatDiffusionSystem } from "../render/webgl2/instance/heatDiffusion/heatDiffusionSystem.js";
 import { WebGl2ParticleSystem } from "../render/webgl2/instance/particle/webGL2ParticleSystem.js";
@@ -36,6 +37,9 @@ class RenderableCompManager {
                 break;
             case RENDERABLE_COMP_SYSTEM_TYPE.HEAT_DIFFUSION_SYSTEM:
                 comp = new Webgl2HeatDiffusionSystem();
+                break;
+            case RENDERABLE_COMP_SYSTEM_TYPE.CURVE_SYSTEM:
+                comp = new Webgl2CurveSystem();
                 break;
             default:
                 break;
