@@ -122,36 +122,36 @@ export class WebGl2ParticleSystem extends BaseRenderableComp {
 
         valueComp = document.getElementById("initialVelocityX") as HTMLInputElement;
         this.initialVelocity.x = Number(valueComp.value);
-        this.initialVelocity.x = this.initialVelocity.x !== NaN ? this.initialVelocity.x : 0;
+        this.initialVelocity.x = !Number.isNaN(this.initialVelocity.x) ? this.initialVelocity.x : 0;
 
         valueComp = document.getElementById("initialVelocityY") as HTMLInputElement;
         this.initialVelocity.y = Number(valueComp.value);
-        this.initialVelocity.y = this.initialVelocity.y !== NaN ? this.initialVelocity.y : -20;
+        this.initialVelocity.y = !Number.isNaN(this.initialVelocity.y) ? this.initialVelocity.y : -20;
 
         valueComp = document.getElementById("initialVelocityZ") as HTMLInputElement;
         this.initialVelocity.z = Number(valueComp.value);
-        this.initialVelocity.z = this.initialVelocity.z !== NaN ? this.initialVelocity.z : 0;
+        this.initialVelocity.z = !Number.isNaN(this.initialVelocity.z) ? this.initialVelocity.z : 0;
 
 
         valueComp = document.getElementById("acceleratedVelocityX") as HTMLInputElement;
         this.acceleratedVelocity.x = Number(valueComp.value);
-        this.acceleratedVelocity.x = this.acceleratedVelocity.x !== NaN ? this.acceleratedVelocity.x : 0;
+        this.acceleratedVelocity.x = !Number.isNaN(this.acceleratedVelocity.x) ? this.acceleratedVelocity.x : 0;
 
         valueComp = document.getElementById("acceleratedVelocityY") as HTMLInputElement;
         this.acceleratedVelocity.y = Number(valueComp.value);
-        this.acceleratedVelocity.y = this.acceleratedVelocity.y !== NaN ? this.acceleratedVelocity.y : 0;
+        this.acceleratedVelocity.y = !Number.isNaN(this.acceleratedVelocity.y) ? this.acceleratedVelocity.y : 0;
 
         valueComp = document.getElementById("acceleratedVelocityZ") as HTMLInputElement;
         this.acceleratedVelocity.z = Number(valueComp.value);
-        this.acceleratedVelocity.z = this.acceleratedVelocity.z !== NaN ? this.acceleratedVelocity.z : 0;
+        this.acceleratedVelocity.z = !Number.isNaN(this.acceleratedVelocity.z) ? this.acceleratedVelocity.z : 0;
 
         valueComp = document.getElementById("initialRotationRate") as HTMLInputElement;
         this.initialRotationRate = Number(valueComp.value);
-        this.initialRotationRate = this.initialRotationRate !== NaN ? this.initialRotationRate : 0.2;
+        this.initialRotationRate = !Number.isNaN(this.initialRotationRate) ? this.initialRotationRate : 0.2;
 
         valueComp = document.getElementById("rotationRateRange") as HTMLInputElement;
         this.rotationRateRange = Number(valueComp.value);
-        this.rotationRateRange = this.rotationRateRange !== NaN ? this.rotationRateRange : 0.1;
+        this.rotationRateRange = !Number.isNaN(this.rotationRateRange) ? this.rotationRateRange : 0.1;
 
         valueComp = document.getElementById("emitRange") as HTMLInputElement;
         this.emitRange = Number(valueComp.value);

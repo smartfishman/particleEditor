@@ -67,12 +67,10 @@ export class Webgl2HeatDiffusionSystem extends BaseRenderableComp {
 
     public draw() {
         super.draw();
-        let camera = webGLManager.getCamera();
         this.webgl2HeatDiffusionShader.bindState();
         this.webgl2HeatDiffusionShader.setBufferData(this.model.getVertexData());
         this.webgl2HeatDiffusionShader.setBufferData(this.model.getIndicesData(), 2);
         this.webgl2HeatDiffusionShader.setBufferData(this.getInstanceData(), 3);
-        this.webgl2HeatDiffusionShader.setUniformAttribute(new Float32Array(Mat4.toArray([], camera.matViewProj)));
         this.webgl2HeatDiffusionShader.drawElementInstance(this.subModelCount);
     }
 

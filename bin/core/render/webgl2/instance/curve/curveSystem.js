@@ -1,10 +1,9 @@
 import { AABB } from "../../../../geometry/aabb.js";
 import { Color } from "../../../../utils/color.js";
-import { Mat4 } from "../../../../utils/exports.js";
+import { timeManager } from "../../../../utils/timeManager.js";
 import Utils from "../../../../utils/utils.js";
 import { Vec3 } from "../../../../utils/vec3.js";
 import { BaseRenderableComp } from "../../../baseRenderableComp.js";
-import webGLManager from "../../../webGLManager.js";
 import { CurveModel } from "../../model/curve_model.js";
 import Webgl2Curve from "../../shader/webgl2_curve.js";
 import { BaseNode } from "../baseNode.js";
@@ -12,12 +11,15 @@ export class Webgl2CurveSystem extends BaseRenderableComp {
     constructor() {
         super();
         this.subModelCount = 2;
+        //热扩散动画的起始时间
+        this.createTimeForAni = 0;
         this.webgl2HeatDiffusionShader = new Webgl2Curve(this.getGL());
         this.node = new BaseNode();
         this.node.width = 100;
         this.node.height = 50;
         this.node.position = new Vec3(100, 300, -300);
         this.initSubModel();
+        this.createTimeForAni = timeManager.getTime();
     }
     initSubModel() {
         this.modelColors = [];
@@ -53,12 +55,11 @@ export class Webgl2CurveSystem extends BaseRenderableComp {
     }
     draw() {
         super.draw();
-        let camera = webGLManager.getCamera();
         this.webgl2HeatDiffusionShader.bindState();
         this.webgl2HeatDiffusionShader.setBufferData(this.model.getVertexData());
         this.webgl2HeatDiffusionShader.setBufferData(this.model.getIndicesData(), 2);
         this.webgl2HeatDiffusionShader.setBufferData(this.getInstanceData(), 3);
-        this.webgl2HeatDiffusionShader.setUniformAttribute(new Float32Array(Mat4.toArray([], camera.matViewProj)));
+        this.webgl2HeatDiffusionShader.setUniformAttribute(this.createTimeForAni);
         this.webgl2HeatDiffusionShader.drawElementInstance(this.subModelCount);
     }
     getInstanceData() {

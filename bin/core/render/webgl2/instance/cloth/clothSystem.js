@@ -1,5 +1,4 @@
 import { AABB } from "../../../../geometry/aabb.js";
-import * as utils from "../../../../utils/exports.js";
 import { Vec3 } from "../../../../utils/vec3.js";
 import { BaseRenderableComp } from "../../../baseRenderableComp.js";
 import webGLManager from "../../../webGLManager.js";
@@ -28,7 +27,6 @@ export class Webgl2ClothSystem extends BaseRenderableComp {
     }
     draw() {
         super.draw();
-        let camera = webGLManager.getCamera();
         let matWorld = makeTranslation(this.node.position.x, this.node.position.y, this.node.position.z);
         let twoMatWorlds = makeTranslation(this.node.position.x, this.node.position.y, this.node.position.z - 200);
         twoMatWorlds = twoMatWorlds.concat(matWorld);
@@ -36,7 +34,6 @@ export class Webgl2ClothSystem extends BaseRenderableComp {
         this.webgl2StandardShader.setBufferData(this.model.getVertexData());
         this.webgl2StandardShader.setBufferData(this.model.getIndicesData(), 2);
         this.webgl2StandardShader.setBufferData(new Float32Array(matWorld), 3);
-        this.webgl2StandardShader.setUniformAttribute(new Float32Array(utils.Mat4.toArray([], camera.matViewProj)));
         this.webgl2StandardShader.drawElementInstance(1);
         // this.webgl2StandardShader.draw();
     }

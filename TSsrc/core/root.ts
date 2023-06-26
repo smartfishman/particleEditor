@@ -22,6 +22,7 @@ export class Root {
         webGLManager.beginRenderPass();
         //第一次渲染
         webGLManager.getCamera().bindFrameBuffer(webglUtils.FRAME_BUFFER_RENDER_PHASE.THE_FRIST_RENDER);
+        webGLManager.setUniformAttribute();
         systems.forEach(systemComp => {
             systemComp.draw();
         })

@@ -19,9 +19,15 @@ layout(std140) uniform AAACamera {
     vec3 viewPos;
 };
 
+layout(std140) uniform AAAGlobal {
+    vec4 gameTime;
+};
+
 layout(std140) uniform AAALocal {
     mat4 matWorld;
 };
+
+uniform float u_createTime;
 
 out vec3 v_fragWorldPos;
 out vec3 v_normalVector;

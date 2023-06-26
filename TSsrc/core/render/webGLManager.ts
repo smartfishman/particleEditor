@@ -2,11 +2,12 @@ import { Ray } from "../geometry/ray.js";
 import { renderableCompMgr } from "../pool/renderableCompMgr.js";
 import { Camera } from "../scene/camera.js";
 import { Mat4 } from "../utils/mat4.js";
+import { timeManager } from "../utils/timeManager.js";
 import Utils from "../utils/utils.js";
 import { Vec2 } from "../utils/vec2.js";
 import { Vec3 } from "../utils/vec3.js";
 import { Vec4 } from "../utils/vec4.js";
-import { PipelineGlobalBindings } from "./webgl2/shader/defines/constantsDefine.js";
+import { PipelineGlobalBindings, UBOCamera, UBOGlobal, UBOLocal } from "./webgl2/shader/defines/constantsDefine.js";
 import * as webglUtils from "./webglUtils.js";
 
 class WebGLManager {
@@ -30,6 +31,8 @@ class WebGLManager {
         this._gl = canvas.getContext("webgl2");
         this._gl.getExtension('EXT_color_buffer_float');
         this._gl.getExtension('EXT_float_blend');
+
+        this.initUniformBuffer();
     }
 
     public getWebGLRenderingContext(): WebGL2RenderingContext {
@@ -132,8 +135,55 @@ class WebGLManager {
         }
         if (!this._uniformBuffer[binding]) {
             this._uniformBuffer[binding] = this._gl.createBuffer();
+
+            let size = 0;
+            switch (binding) {
+                case UBOCamera.BINDING:
+                    size = UBOCamera.SIZE;
+                    break;
+                case UBOLocal.BINDING:
+                    size = UBOLocal.SIZE;
+                    break;
+                case UBOGlobal.BINDING:
+                    size = UBOGlobal.SIZE;
+                    break;
+                default:
+                    console.error("未知的UBO BINDING")
+                    break;
+            }
+
+            let resultBuffer = this._uniformBuffer[binding];
+
+            this._gl.bindBuffer(this._gl.UNIFORM_BUFFER, resultBuffer);
+            this._gl.bufferData(this._gl.UNIFORM_BUFFER, size, this._gl.STATIC_DRAW);
+            this._gl.bindBuffer(this._gl.UNIFORM_BUFFER, null);
+            this._gl.bindBufferBase(this._gl.UNIFORM_BUFFER, binding, resultBuffer);
         }
         return this._uniformBuffer[binding];
+    }
+
+    public initUniformBuffer() {
+        this.getUniformBufferByBindings(UBOCamera.BINDING);
+        this.getUniformBufferByBindings(UBOGlobal.BINDING);
+        this.getUniformBufferByBindings(UBOLocal.BINDING);
+    }
+
+    public setUniformAttribute(): void {
+        let matViewProj = new Float32Array(Mat4.toArray([], this._camera.matViewProj));
+        this._gl.bindBuffer(this._gl.UNIFORM_BUFFER, this._uniformBuffer[UBOCamera.BINDING]);
+        this._gl.bufferSubData(this._gl.UNIFORM_BUFFER, UBOCamera.MAT_VIEW_PROJ_OFFSET * 4, matViewProj);
+        this._gl.bufferSubData(this._gl.UNIFORM_BUFFER, UBOCamera.LIGHT_COLOR_OFFSET * 4, new Float32Array([1, 1, 1]));
+        this._gl.bufferSubData(this._gl.UNIFORM_BUFFER, UBOCamera.LIGHT_POS_OFFSET * 4, new Float32Array([100, 200, 100]));
+        let viewPos = webGLManager.getCamera().getPos();
+        this._gl.bufferSubData(this._gl.UNIFORM_BUFFER, UBOCamera.VIEW_POS_OFFSET * 4, new Float32Array([viewPos.x, viewPos.y, viewPos.z]));
+
+        this._gl.bindBuffer(this._gl.UNIFORM_BUFFER, this._uniformBuffer[UBOGlobal.BINDING]);
+        this._gl.bufferSubData(this._gl.UNIFORM_BUFFER, UBOGlobal.GAME_TIME * 4, new Float32Array([timeManager.getTime(), 0, 0, 0]));
+
+        // this._gl.bindBuffer(this._gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
+        // this._gl.bufferSubData(this._gl.UNIFORM_BUFFER, UBOLocal.MAT_WORLD_OFFSET * 4, matWorld);
+
+        this._gl.bindBuffer(this._gl.UNIFORM_BUFFER, null);
     }
 }
 

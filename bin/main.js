@@ -11,7 +11,7 @@ export function gameStart() {
     webGLManager.getCamera().update();
     eventManager.init();
     director.init();
-    console.log("gameStart ");
+    console.log("gameStart 123");
     renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.COORDINATE_SYSTEM);
     let clothComp = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CLOTH_SYSTEM);
     clothComp.node.position.y = 150;
@@ -35,6 +35,7 @@ export function gameStart() {
     let resetCurve = document.getElementById("resetToCurve");
     resetCurve.onclick = () => {
         webGLManager.getCamera().resetViewPos();
+        curveSystem.createTimeForAni = timeManager.getTime();
     };
     canvas.onclick = (event) => {
         webglUtils.GlobalValue.enableLog = true;

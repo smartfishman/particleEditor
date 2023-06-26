@@ -8,6 +8,7 @@ import * as webglUtils from "./core/render/webglUtils.js";
 import { renderableCompMgr } from "./core/pool/renderableCompMgr.js";
 import { director } from "./core/director.js";
 import { Webgl2ClothSystem } from "./core/render/webgl2/instance/cloth/clothSystem.js";
+import { Webgl2CurveSystem } from "./core/render/webgl2/instance/curve/curveSystem";
 
 export function gameStart() {
     let canvas = document.getElementById("testCanvas") as HTMLCanvasElement;
@@ -15,7 +16,7 @@ export function gameStart() {
     webGLManager.getCamera().update();
     eventManager.init();
     director.init();
-    console.log("gameStart ");
+    console.log("gameStart 123");
 
     renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.COORDINATE_SYSTEM);
     let clothComp = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CLOTH_SYSTEM);
@@ -26,7 +27,7 @@ export function gameStart() {
     let particleSystem: WebGl2ParticleSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.PARTICLE_SYSTEM) as WebGl2ParticleSystem;
 
     let heatDiffusionSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.HEAT_DIFFUSION_SYSTEM);
-    let curveSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CURVE_SYSTEM);
+    let curveSystem = renderableCompMgr.createCompBySystemType(RENDERABLE_COMP_SYSTEM_TYPE.CURVE_SYSTEM) as Webgl2CurveSystem;
     
     let lastTime = timeManager.getTime();
     setInterval(() => {
@@ -43,6 +44,7 @@ export function gameStart() {
     let resetCurve = document.getElementById("resetToCurve");
     resetCurve.onclick = () => {
         webGLManager.getCamera().resetViewPos();
+        curveSystem.createTimeForAni = timeManager.getTime();
     };
     canvas.onclick = (event: MouseEvent) => {
         webglUtils.GlobalValue.enableLog = true;

@@ -1,10 +1,8 @@
 import { AABB } from "../../../../geometry/aabb.js";
 import { Color } from "../../../../utils/color.js";
-import { Mat4 } from "../../../../utils/exports.js";
 import Utils from "../../../../utils/utils.js";
 import { Vec3 } from "../../../../utils/vec3.js";
 import { BaseRenderableComp } from "../../../baseRenderableComp.js";
-import webGLManager from "../../../webGLManager.js";
 import { HeatDiffusionModel } from "../../model/heat_diffusion_model.js";
 import Webgl2HeatDiffusion from "../../shader/webgl2_heat_diffusion.js";
 import { BaseNode } from "../baseNode.js";
@@ -53,12 +51,10 @@ export class Webgl2HeatDiffusionSystem extends BaseRenderableComp {
     }
     draw() {
         super.draw();
-        let camera = webGLManager.getCamera();
         this.webgl2HeatDiffusionShader.bindState();
         this.webgl2HeatDiffusionShader.setBufferData(this.model.getVertexData());
         this.webgl2HeatDiffusionShader.setBufferData(this.model.getIndicesData(), 2);
         this.webgl2HeatDiffusionShader.setBufferData(this.getInstanceData(), 3);
-        this.webgl2HeatDiffusionShader.setUniformAttribute(new Float32Array(Mat4.toArray([], camera.matViewProj)));
         this.webgl2HeatDiffusionShader.drawElementInstance(this.subModelCount);
     }
     getInstanceData() {

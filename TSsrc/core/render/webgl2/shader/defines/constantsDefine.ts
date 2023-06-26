@@ -29,6 +29,18 @@ export class UBOCamera {
     ]);
 }
 
+export class UBOGlobal {
+    public static GAME_TIME = 0;
+    public static COUNT = UBOGlobal.GAME_TIME + 4;
+    public static SIZE = UBOGlobal.COUNT * 4;
+
+    public static NAME = "AAAGlobal";
+    public static readonly BINDING = PipelineGlobalBindings.UBO_GLOBAL;
+    public static readonly LAYOUT = new UniformBlock(UBOGlobal.BINDING, UBOGlobal.NAME, [
+        new Uniform('gameTime', Type.FLOAT4),
+    ]);
+}
+
 export class UBOLocal {
     public static MAT_WORLD_OFFSET = 0;
     public static COUNT = UBOLocal.MAT_WORLD_OFFSET + 16;

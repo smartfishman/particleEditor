@@ -26,6 +26,16 @@ UBOCamera.LAYOUT = new UniformBlock(UBOCamera.BINDING, UBOCamera.NAME, [
     new Uniform('lightPos', Type.FLOAT3),
     new Uniform('viewPos', Type.FLOAT3),
 ]);
+export class UBOGlobal {
+}
+UBOGlobal.GAME_TIME = 0;
+UBOGlobal.COUNT = UBOGlobal.GAME_TIME + 4;
+UBOGlobal.SIZE = UBOGlobal.COUNT * 4;
+UBOGlobal.NAME = "AAAGlobal";
+UBOGlobal.BINDING = PipelineGlobalBindings.UBO_GLOBAL;
+UBOGlobal.LAYOUT = new UniformBlock(UBOGlobal.BINDING, UBOGlobal.NAME, [
+    new Uniform('gameTime', Type.FLOAT4),
+]);
 export class UBOLocal {
 }
 UBOLocal.MAT_WORLD_OFFSET = 0;

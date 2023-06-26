@@ -1,7 +1,7 @@
 import { data as shaderAssetData } from "../../../../../lib/shaderAssets/shaderAsset.js";
 import webGLManager from "../../webGLManager.js";
 import * as webglUtils from "../../webglUtils.js";
-import { UBOCamera, UBOLocal } from "./defines/constantsDefine.js";
+import { UBOCamera, UBOGlobal, UBOLocal } from "./defines/constantsDefine.js";
 
 export default class Webgl2Curve {
     private gl: WebGL2RenderingContext;
@@ -12,6 +12,9 @@ export default class Webgl2Curve {
     private vertexAttributeName1: string;
     private vertexAttributeName2: string;
     private imageUniformName: string;
+    private createTimeUniformName: string;
+
+    private createTimeUniformIndex: WebGLUniformLocation;
 
     private image: HTMLImageElement;
     private buffDataLen: number;
@@ -22,6 +25,7 @@ export default class Webgl2Curve {
     private glTexture: WebGLTexture;
     private glVAO: WebGLVertexArrayObject;
     private glUBOCameraBuffer: WebGLBuffer;
+    private glUBOGlobalBuffer: WebGLBuffer;
     private glUBOLocalBuffer: WebGLBuffer;
 
     constructor(gl: WebGLRenderingContext) {
@@ -31,6 +35,7 @@ export default class Webgl2Curve {
         this.vertexAttributeName1 = "a_position";
         this.vertexAttributeName2 = "a_normalVector";
         this.imageUniformName = "u_image2";
+        this.createTimeUniformName = "u_createTime";
         this.initShader();
     }
 
@@ -74,21 +79,15 @@ export default class Webgl2Curve {
     }
 
     private initUBO(): void {
-        // this.glUBOCameraBuffer = this.gl.createBuffer();
         this.glUBOCameraBuffer = webGLManager.getUniformBufferByBindings(UBOCamera.BINDING);
-        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
-        this.gl.bufferData(this.gl.UNIFORM_BUFFER, UBOCamera.SIZE, this.gl.STATIC_DRAW);
-        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
-        this.gl.bindBufferBase(this.gl.UNIFORM_BUFFER, UBOCamera.BINDING, this.glUBOCameraBuffer);
         let uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOCamera.NAME);
         this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOCamera.BINDING);
 
-        // this.glUBOLocalBuffer = this.gl.createBuffer();
+        this.glUBOGlobalBuffer = webGLManager.getUniformBufferByBindings(UBOGlobal.BINDING);
+        uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOGlobal.NAME);
+        this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOGlobal.BINDING);
+
         this.glUBOLocalBuffer = webGLManager.getUniformBufferByBindings(UBOLocal.BINDING);
-        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
-        this.gl.bufferData(this.gl.UNIFORM_BUFFER, UBOLocal.SIZE, this.gl.STATIC_DRAW);
-        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
-        this.gl.bindBufferBase(this.gl.UNIFORM_BUFFER, UBOLocal.BINDING, this.glUBOLocalBuffer);
         uboLocation = this.gl.getUniformBlockIndex(this.glProgram, UBOLocal.NAME);
         this.gl.uniformBlockBinding(this.glProgram, uboLocation, UBOLocal.BINDING);
     }
@@ -129,6 +128,14 @@ export default class Webgl2Curve {
         this.gl.vertexAttribDivisor(8, 1);
     }
 
+    private initUniformAttribute(): void {
+        this.createTimeUniformIndex = this.gl.getUniformLocation(this.glProgram, this.createTimeUniformName);
+    }
+
+    public setUniformAttribute(createTime: number): void {
+        this.gl.uniform1f(this.createTimeUniformIndex, createTime);
+    }
+
     /**
      * 
      * @param buffData 
@@ -158,20 +165,6 @@ export default class Webgl2Curve {
 
     }
 
-    public setUniformAttribute(matViewProj: Float32Array): void {
-        this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOCameraBuffer);
-        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.MAT_VIEW_PROJ_OFFSET * 4, matViewProj);
-        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_COLOR_OFFSET * 4, new Float32Array([1, 1, 1]));
-        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.LIGHT_POS_OFFSET * 4, new Float32Array([100, 200, 100]));
-        let viewPos = webGLManager.getCamera().getPos();
-        this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOCamera.VIEW_POS_OFFSET * 4, new Float32Array([viewPos.x, viewPos.y, viewPos.z]));
-
-        // this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, this.glUBOLocalBuffer);
-        // this.gl.bufferSubData(this.gl.UNIFORM_BUFFER, UBOLocal.MAT_WORLD_OFFSET * 4, matWorld);
-
-        // this.gl.bindBuffer(this.gl.UNIFORM_BUFFER, null);
-    }
-
     private _bindTexture(image: TexImageSource, textureUnitsOffset: number, textureObjects: number, uniformLoc: WebGLUniformLocation, glTexture: WebGLTexture): void {
         this.gl.activeTexture(this.gl.TEXTURE0 + textureUnitsOffset);
         this.gl.bindTexture(textureObjects, glTexture);
@@ -186,6 +179,7 @@ export default class Webgl2Curve {
     public bindState(): void {
         webGLManager.useProgram(this.glProgram);
         this.gl.bindVertexArray(this.glVAO);
+        this.initUniformAttribute();
         this.bindTexture();
     }
 

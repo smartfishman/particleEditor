@@ -11,9 +11,15 @@ layout(std140) uniform AAACamera {
     vec3 viewPos;
 };
 
+layout(std140) uniform AAAGlobal {
+    vec4 gameTime;
+};
+
 layout(std140) uniform AAALocal {
     mat4 matWorld;
 };
+
+uniform float u_createTime;
 
 in vec3 v_fragWorldPos;
 in vec3 v_normalVector;
@@ -40,7 +46,19 @@ void main() {
     float nowZ = v_fragLocalPos.z;
     float lineWidth = 0.5;
 
-    float expectZ = sin(2.0*pi*nowX/v_rectWidth)*v_rectWidth/2.0;
+    //已知热扩散方程： cos((2n*PI/L)*x)*pow(e,-a*pow(2n*PI/L,2)*t
+    //n 为余弦周期数 PI=3.1415926 L为画布宽度  e为自然底数 a为变换系数 x为空间位置 t为时间位置
+    float n = 2.0;
+    float L = v_rectWidth;
+    float e = exp(1.0) * 1.0;
+    float a = 0.5;
+    float x = nowX;
+    float t = (gameTime.x - u_createTime)/100.0;
+
+    float expectZ = cos((2.0*n*pi/L) * x) * pow(e,-a * pow(2.0*n*pi/L,2.0)* t) * v_rectWidth/2.0;
+
+
+    // float expectZ = sin(2.0*pi*nowX/v_rectWidth)*v_rectWidth/2.0;
 
     if(abs(nowZ - expectZ)<lineWidth){
         fragColor = lineColor;
