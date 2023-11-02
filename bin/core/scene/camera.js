@@ -254,10 +254,10 @@ export class Camera {
         }
     }
     resetViewPos() {
-        this._pos = new utils.Vec3(100, 400, -300);
+        this._pos = new utils.Vec3(100, 300, -200);
         this._rot = new utils.Quat();
         let radY = 0;
-        let radX = Math.PI / 2;
+        let radX = 0;
         utils.Quat.rotateAround2(this._rot, this._rot, new utils.Vec3(0, 1, 0), -radY);
         // utils.Quat.rotateY(this._rot, this._rot, -radY);
         utils.Quat.rotateX(this._rot, this._rot, -radX);

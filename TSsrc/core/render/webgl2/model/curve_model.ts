@@ -29,8 +29,8 @@ export class CurveModel {
             let offsetWidth = node.width >> 1;
             let offsetHeight = node.height >>1;
             let offsetX = (flag < 2 ? -1 : 1) * offsetWidth;
-            let offsetZ = (flag % 2 === 0 ? -1 : 1) * offsetHeight;
-            let offsetY = 0;
+            let offsetY = (flag % 2 === 0 ? -1 : 1) * offsetHeight;
+            let offsetZ = 0;
             this._verTexData[indexOffset++] = 0 + offsetX;
             this._verTexData[indexOffset++] = 0 + offsetY;
             this._verTexData[indexOffset++] = 0 + offsetZ;
